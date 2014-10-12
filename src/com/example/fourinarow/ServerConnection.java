@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Message;
 
 public class ServerConnection {
-	
+	final int lol;
 	final static String SEND_MESSAGE = "send_message";
 	final static String GET_MESSAGE = "get_message";
 	final static String SEND_USER = "send_user";
