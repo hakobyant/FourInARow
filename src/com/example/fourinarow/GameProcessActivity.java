@@ -214,4 +214,19 @@ public boolean onTouchEvent(MotionEvent event) {
 				
 				}
 	}
+	
+	
+	
+	/*
+	 * -----------startGameWith---------------
+	 * Starts a game with the opponent 
+	 * 'opponentID':'opponentUsername':'opponentScore'
+	 * 
+	 */
+	public static void startGameWith(int opponentID, String opponentUsername,
+			int opponentScore) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

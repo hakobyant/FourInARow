@@ -1,6 +1,7 @@
 package com.example.fourinarow;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,11 +28,11 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
+		ServerConnection.activePlayersConnection(MainActivity.Player.playerID);
 		createPickOpponentLayout();
-		
-		
-		
 	}
+	
 	private void createPickOpponentLayout() {
 		players = new TableLayout(this);
 		formats = new ArrayList<TableRow>();
@@ -76,5 +77,11 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		startActivity(intent4);
 		
 	}
+	
+	public static void updatePlayerTable(List<String[]> retrievedResponse) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

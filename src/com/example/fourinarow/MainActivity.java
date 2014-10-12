@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends Activity {
 	
 	final static String ID = "ID";
 	final static String USERNAME = "USERNAME";
@@ -43,14 +43,14 @@ public class MainActivity extends Activity implements OnClickListener{
 	final static String SEND_USER = "send_user";
 	public static final int DEFAULT_SCORE = 1000;
 
-	private static class Player {
-		private static int playerID = -1;
-		private static String playerUsername = "";
-		private static int playerScore = DEFAULT_SCORE;
+	public static class Player {
+		public static int playerID = -1;
+		public static String playerUsername = "";
+		public static int playerScore = DEFAULT_SCORE;
 		
-		private static int currentOpponentID = -1;
-		private static String currentOpponentUsername = "";
-		private static int currentOpponentScore = DEFAULT_SCORE;
+		public static int currentOpponentID = -1;
+		public static String currentOpponentUsername = "";
+		public static int currentOpponentScore = DEFAULT_SCORE;
 	}
 	
 	private static SharedPreferences preferences;
@@ -87,19 +87,10 @@ public class MainActivity extends Activity implements OnClickListener{
 			createDialog();
 		}
 		else {
-
 			Player.playerID = preferences.getInt("ID", -1);
-			
-			Log.i("Vasa", Player.playerUsername);
-
 			Player.playerUsername = preferences.getString("Name", "Player");
-			
-			Log.i("Vasa", Player.playerUsername);
-
 			Player.playerScore = preferences.getInt("Score", DEFAULT_SCORE);
 
-			Log.i("Vasa", Player.playerUsername);
-			
 			Greeting.setText("Hello " + Player.playerUsername);
 		}
 
@@ -181,7 +172,6 @@ public class MainActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Log.i("digig","r");
 				Intent PickOpponentIntent = new Intent(MainActivity.this, PickOpponentActivity.class);
 				startActivity(PickOpponentIntent);
 			}
@@ -192,7 +182,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		
 		highScoresButton = new Button(this);
 		highScoresButton.setWidth(buttonWidth);
-		highScoresButton.setOnClickListener(this);
+//		highScoresButton.setOnClickListener(this);
 		highScoresButton.setText("Highscores");
 		HighScoresRow.addView(highScoresButton);
 
@@ -236,7 +226,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		//dialog.getWindow().setLayout(screenWidth/3, screenHeight/3);
 		LinearLayout dialogLayout = new LinearLayout(this);
 		InputFilter[] filterArray = new InputFilter[1];
-		filterArray[0] = new InputFilter.LengthFilter(8);
+		filterArray[0] = new InputFilter.LengthFilter(20);
 		enterName = new EditText(this);
 		enterName.setFilters(filterArray);
 		enterName.setHint("Type here");
@@ -268,12 +258,6 @@ public class MainActivity extends Activity implements OnClickListener{
 		firstTime = false;
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-	}
-	
-	
 	public static void updateScreen(String response) {
 		// TODO Auto-generated method stub
 	}
@@ -306,17 +290,6 @@ public class MainActivity extends Activity implements OnClickListener{
 	}
 
 
-	/*
-	 * -----------startGameWith---------------
-	 * Starts a game with the opponent 
-	 * 'opponentID':'opponentUsername':'opponentScore'
-	 * 
-	 */
-	public static void startGameWith(int opponentID, String opponentUsername,
-			int opponentScore) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/*
 	 * ---------------UserIsAlreadyPlaying------------
@@ -346,10 +319,6 @@ public class MainActivity extends Activity implements OnClickListener{
 	/*
 	 * Get the online players and update the table
 	 */
-	public static void updatePlayerTable(List<String[]> retrievedResponse) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public static void calculateNewScore(final int score1, final int score2) {
 		

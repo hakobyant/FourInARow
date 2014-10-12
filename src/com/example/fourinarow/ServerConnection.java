@@ -215,7 +215,7 @@ public class ServerConnection {
 	 * If there is someone who requested user_id a game, send_user.php deletes that message and sends back the requester info.
 	 * 
 	 */
-	public static void startGameScreen(final int userID) {
+	public static void activePlayersConnection(final int userID) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("request_type", "start_game_screen"));
 	    pairs.add(new BasicNameValuePair("user_id", Integer.toString(userID)));
@@ -229,12 +229,12 @@ public class ServerConnection {
 				List<String[]> retrievedResponse = retrieveMessage(response);
 				int last = retrievedResponse.size() - 1;
 				
+				PickOpponentActivity.updatePlayerTable(retrievedResponse);
+				
 				if(retrievedResponse.get(last)[0].compareTo("-1") == 0) {
 					
-					MainActivity.updatePlayerTable(retrievedResponse);
-					
-					//do again					
-					startGameScreen(userID);
+					//do again
+					activePlayersConnection(userID);
 					
 				}
 				else {
@@ -242,7 +242,7 @@ public class ServerConnection {
 					String opponentUsername = retrievedResponse.get(last)[1];
 					int opponentScore = Integer.parseInt(retrievedResponse.get(last)[2]);
 					
-					MainActivity.startGameWith(opponentID,opponentUsername,opponentScore);
+					GameProcessActivity.startGameWith(opponentID,opponentUsername,opponentScore);
 				}
 
 			}
