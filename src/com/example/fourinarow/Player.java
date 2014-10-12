@@ -10,6 +10,7 @@ public class Player {
 	private String opponentColor;
 	private boolean isSoundOn; 
 
+	a
 	
 	private Player currentOpponentPlayer;
 	
