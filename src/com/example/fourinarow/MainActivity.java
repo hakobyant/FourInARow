@@ -1,17 +1,12 @@
 package com.example.fourinarow;
 
 
-import java.util.List;
-
-import com.example.fourinarow.ServerConnection;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
-//import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +25,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+//import android.graphics.Rect;
 
 
 
@@ -42,6 +38,8 @@ public class MainActivity extends Activity {
 	final static String GET_MESSAGE = "get_Message";
 	final static String SEND_USER = "send_user";
 	public static final int DEFAULT_SCORE = 1000;
+	
+
 
 	private static Player player;
 	

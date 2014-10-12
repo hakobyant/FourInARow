@@ -14,7 +14,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,7 +25,8 @@ public class ServerConnection {
 	final static String UNSUCCESSFUL = "Unsuccessful";
 	final static String SUCCESSFUL = "Successful";
 
-	
+	public static MainActivty activity;
+
 	private static ArrayList<MyRequest> requestQueue = new ArrayList<ServerConnection.MyRequest>();
 	private static RequestThread myRequestThread = new RequestThread();
 	
@@ -338,10 +338,17 @@ public class ServerConnection {
 		    myRequest.setRequestObserver(new RequestObserver() {
 
 				@Override
-				public void onSuccess(String response) {
+				public void onSuccess(final String response) {
 					// TODO Auto-generated method stub
 					
-					MainActivity.updateScreen(response);
+					MainActivity.runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							MainActivity.updateScreen(response);
+							
+						}
+					};
 					
 				}
 

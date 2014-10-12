@@ -10,8 +10,6 @@ public class Player {
 	private String opponentColor;
 	private boolean isSoundOn; 
 
-	axjiii
-	
 	private Player currentOpponentPlayer;
 	
 	public Player() {
