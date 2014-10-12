@@ -3,12 +3,17 @@ package com.example.fourinarow;
 public class Player {
 	public static final int DEFAULT_SCORE = 1000;
 
-	private static int playerID = -1;
-	private static String playerUsername = "";
-	private static int playerScore = DEFAULT_SCORE;
+	private static int playerID;
+	private static String playerUsername;
+	private static int playerScore;
 	
-	private static Player currentOppponentPlayer;
+	private static Player currentOpponentPlayer;
 	
+	public Player() {
+		playerID = -1;
+		playerUsername = "";
+		playerScore = DEFAULT_SCORE;
+	}
 	public int getPlayerID() {
 		return playerID;
 	}
@@ -22,7 +27,7 @@ public class Player {
 	}
 	
 	public Player getCurrentOpponentPlayer() {
-		return currentOppponentPlayer;		
+		return currentOpponentPlayer;		
 	}
 	
 	public void setPlayerID(final int id) {
@@ -38,7 +43,7 @@ public class Player {
 	}
 
 	public void setCurrentOpponentPlayer(final Player p) {
-		currentOppponentPlayer = p;
+		currentOpponentPlayer = p;
 	}
 	
 	public void setPlayer(final int id, final String usr, final int score) {

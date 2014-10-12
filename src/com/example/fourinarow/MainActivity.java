@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+		player = new Player();
 		setPrefs();
 
 		createHandler();
