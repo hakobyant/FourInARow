@@ -25,6 +25,7 @@ public class ServerConnection {
 	final static String GET_MESSAGE = "get_message";
 	final static String SEND_USER = "send_user";
 	final static String UNSUCCESSFUL = "Unsuccessful";
+	final static String SUCCESSFUL = "Successful";
 
 	
 	private static ArrayList<MyRequest> requestQueue = new ArrayList<ServerConnection.MyRequest>();
@@ -198,12 +199,12 @@ public class ServerConnection {
 	/*
 	 * ---------startGameScreen-----------
 	 * Sends a response to the server (send_user.php) of the form
-	 * 'request_type':'user_id'
+	 * 'request_type':'player1.id'
 	 * 
-	 * Meaning 'user_id' wants to play
+	 * Meaning 'player1' wants to play
 	 * 
 	 * i.e. 'request_type' = "start_game_screen",
-	 * 		'user_id' is going to be the ID of the phone.
+	 * 		'player1.id' is going to be the ID of the phone.
 	 * 
 	 * Gets as a response the list of all players available in the form:
 	 * 'ID':'username':'score';
@@ -215,10 +216,10 @@ public class ServerConnection {
 	 * If there is someone who requested user_id a game, send_user.php deletes that message and sends back the requester info.
 	 * 
 	 */
-	public static void activePlayersConnection(final int userID) {
+	public static void activePlayersConnection(final Player player1) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("request_type", "start_game_screen"));
-	    pairs.add(new BasicNameValuePair("user_id", Integer.toString(userID)));
+	    pairs.add(new BasicNameValuePair("user_id", Integer.toString(player1.getPlayerID())));
 	    
 	    MyRequest myRequest = new MyRequest(SEND_USER, pairs);
 	    myRequest.setRequestObserver(new RequestObserver() {
@@ -234,15 +235,16 @@ public class ServerConnection {
 				if(retrievedResponse.get(last)[0].compareTo("-1") == 0) {
 					
 					//do again
-					activePlayersConnection(userID);
+					activePlayersConnection(player1);
 					
 				}
 				else {
-					int opponentID = Integer.parseInt(retrievedResponse.get(last)[0]);
-					String opponentUsername = retrievedResponse.get(last)[1];
-					int opponentScore = Integer.parseInt(retrievedResponse.get(last)[2]);
 					
-					GameProcessActivity.startGameWith(opponentID,opponentUsername,opponentScore);
+					player1.getCurrentOpponentPlayer().setPlayer(Integer.parseInt(retrievedResponse.get(last)[0]),
+													retrievedResponse.get(last)[1],
+													Integer.parseInt(retrievedResponse.get(last)[2]));
+					
+					GameProcessActivity.startGameWith(player1.getCurrentOpponentPlayer());
 				}
 
 			}
@@ -270,8 +272,8 @@ public class ServerConnection {
 	 * send_message.php DOES NOT allow to have 2 different players request a game to the same user.
 	 * 
 	 */
-	public static void requestGameWith(final int  firstUserID, final int secondUserID) {
-		sendMove(firstUserID,secondUserID,"Game");
+	public static void requestGameWith(final Player player1, final Player player2) {
+		sendMove(player1,player2,"Game");
 	}
 	
 	/*
@@ -286,10 +288,10 @@ public class ServerConnection {
 	 * Gets "Unsuccessful" if seconUserID already got an invitation.
 	 * 
 	 */
-	public static void sendMove(final int  firstUserID, final int secondUserID, final String message) {
+	public static void sendMove(final Player player1, final Player player2, final String message) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-	    pairs.add(new BasicNameValuePair("first_user_id", Integer.toString(firstUserID)));
-	    pairs.add(new BasicNameValuePair("second_user_id", Integer.toString(secondUserID)));
+	    pairs.add(new BasicNameValuePair("first_user_id", Integer.toString(player1.getPlayerID())));
+	    pairs.add(new BasicNameValuePair("second_user_id", Integer.toString(player2.getPlayerID())));
 	    pairs.add(new BasicNameValuePair("message", message));
 	    
 	    MyRequest myRequest = new MyRequest(SEND_MESSAGE, pairs);
@@ -300,7 +302,12 @@ public class ServerConnection {
 				// 
 				//  In the case of 		message = "Game" and was not able to add in the table.
 				if(response.compareTo(UNSUCCESSFUL) == 0)	{
-					MainActivity.UserIsAlreadyPlaying(secondUserID);
+					MainActivity.UserIsAlreadyPlaying(player2);
+				}
+				
+				//  In the case of 		message = "Game" and was able to add in the table, i.e. start a game with.
+				else if(response.compareTo(SUCCESSFUL) == 0){
+					
 				}
 				else {
 					//Do the Move, Draw the Move
@@ -328,9 +335,9 @@ public class ServerConnection {
 	 * 
 	 * 
 	 */
-	public static void getMove(final int userID) {
+	public static void getMove(final Player player1) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-	    pairs.add(new BasicNameValuePair("user_id", Integer.toString(userID)));
+	    pairs.add(new BasicNameValuePair("user_id", Integer.toString(player1.getPlayerID())));
 
 		
 		 MyRequest myRequest = new MyRequest(GET_MESSAGE, pairs);
@@ -354,11 +361,11 @@ public class ServerConnection {
 	}
 	
 	public static void updateScore(final int newScore) {
-		updateNameAndScore(MainActivity.getCurrentName(), newScore);
+		updateNameAndScore(MainActivity.getPlayer().getPlayerUsername(), newScore);
 	}
 	
 	public static void updateName(final String newName) {
-		updateNameAndScore(newName,MainActivity.getCurrentScore());
+		updateNameAndScore(newName,MainActivity.getPlayer().getPlayerScore());
 	}
 
 	

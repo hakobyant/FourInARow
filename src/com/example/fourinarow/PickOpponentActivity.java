@@ -29,7 +29,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		ServerConnection.activePlayersConnection(MainActivity.Player.playerID);
+		ServerConnection.activePlayersConnection(MainActivity.getPlayer());
 		createPickOpponentLayout();
 	}
 	

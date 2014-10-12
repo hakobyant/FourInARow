@@ -229,4 +229,9 @@ public boolean onTouchEvent(MotionEvent event) {
 		
 	}
 
+	public static void startGameWith(Player currentOpponentPlayer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

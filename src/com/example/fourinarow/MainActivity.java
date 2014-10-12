@@ -43,15 +43,7 @@ public class MainActivity extends Activity {
 	final static String SEND_USER = "send_user";
 	public static final int DEFAULT_SCORE = 1000;
 
-	public static class Player {
-		public static int playerID = -1;
-		public static String playerUsername = "";
-		public static int playerScore = DEFAULT_SCORE;
-		
-		public static int currentOpponentID = -1;
-		public static String currentOpponentUsername = "";
-		public static int currentOpponentScore = DEFAULT_SCORE;
-	}
+	private static Player player;
 	
 	private static SharedPreferences preferences;
 	private static SharedPreferences.Editor editor;
@@ -87,11 +79,11 @@ public class MainActivity extends Activity {
 			createDialog();
 		}
 		else {
-			Player.playerID = preferences.getInt("ID", -1);
-			Player.playerUsername = preferences.getString("Name", "Player");
-			Player.playerScore = preferences.getInt("Score", DEFAULT_SCORE);
+			player.setPlayer(preferences.getInt("ID", -1), 
+							preferences.getString("Name", "Player"), 
+							preferences.getInt("Score", DEFAULT_SCORE));
 
-			Greeting.setText("Hello " + Player.playerUsername);
+			Greeting.setText("Hello " + player.getPlayerUsername());
 		}
 
 		
@@ -148,7 +140,7 @@ public class MainActivity extends Activity {
 		GreetingRow = new TableRow(this);
 		GreetingRow.setPadding(0, 0, 0, 50);
 		Greeting = new TextView(this);
-		Greeting.setText("Hello " + Player.playerUsername);
+		Greeting.setText("Hello " + player.getPlayerUsername());
 		Greeting.setWidth(buttonWidth);
 		Greeting.setTypeface(Typeface.MONOSPACE);
 		Greeting.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -271,17 +263,17 @@ public class MainActivity extends Activity {
 		editor.putInt(SCORE, Integer.parseInt(parsedResponse[2]));
 		editor.commit();
 		
-		Player.playerID = Integer.parseInt(parsedResponse[0]);
-		Player.playerUsername = parsedResponse[1];
-		Player.playerScore = Integer.parseInt(parsedResponse[2]);
+		player.setPlayer(Integer.parseInt(parsedResponse[0]),
+						parsedResponse[1],
+						Integer.parseInt(parsedResponse[2]));
 	}
 	
 	public static void updateCurrentOpponentInfo(String response) {
 		String[] parsedResponse = response.split("[:]");
 	
-		Player.currentOpponentID = Integer.parseInt(parsedResponse[0]);
-		Player.currentOpponentUsername = parsedResponse[1];
-		Player.currentOpponentScore = Integer.parseInt(parsedResponse[2]);
+		player.getCurrentOpponentPlayer().setPlayer(Integer.parseInt(parsedResponse[0]),
+													parsedResponse[1],
+													Integer.parseInt(parsedResponse[2]));
 
 	}
 	
@@ -290,29 +282,20 @@ public class MainActivity extends Activity {
 	}
 
 
+	public static Player getPlayer() {
+		return player;
+	}
 
 	/*
 	 * ---------------UserIsAlreadyPlaying------------
 	 * 
-	 * Gives a Dialog saying that the user with 'secondUserID' is
+	 * Gives a Dialog saying that the user 'player2' is
 	 * not available any more. Playing another game.
 	 * 
 	 */
-	public static void UserIsAlreadyPlaying(int secondUserID) {
+	public static void UserIsAlreadyPlaying(Player player2) {
 		// TODO Auto-generated method stub
 		
-	}
-
-
-	public static String getCurrentName() {
-		// TODO Auto-generated method stub
-		return Player.playerUsername;
-	}
-
-
-	public static int getCurrentScore() {
-		// TODO Auto-generated method stub
-		return Player.playerScore;
 	}
 
 
