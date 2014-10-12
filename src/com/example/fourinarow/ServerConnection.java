@@ -378,7 +378,7 @@ public class ServerConnection {
 				// TODO Auto-generated method stub
 				
 				SettingsActivity.goToMainActivity();
-
+ 
 			}
 
 			@Override
