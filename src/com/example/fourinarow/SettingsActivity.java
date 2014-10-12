@@ -108,9 +108,22 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (nameEdit.getText().toString().compareTo("") != 0
+		
+		String newName = nameEdit.getText().toString();
+		
+		if (newName.compareTo("") != 0
 				&& prefColorSpinner.getSelectedItem() != opponentColorSpinner
 						.getSelectedItem()) {
+			Player player = GameManager.getInstance().mainActivity.getPlayer();
+			
+			String response = "";
+			response += Integer.toString(player.getPlayerID());
+			response += ":";
+			response += newName;
+			response += ":";
+			response += Integer.toString(player.getPlayerScore());
+			
+			GameManager.getInstance().mainActivity.updateUserInfo(response);
 			ServerConnection.updateName(nameEdit.getText().toString());
 		} else {
 			if (prefColorSpinner.getSelectedItem() == opponentColorSpinner

@@ -213,7 +213,7 @@ public class ServerConnection {
 		pairs.add(new BasicNameValuePair("request_type", "start_game_screen"));
 		pairs.add(new BasicNameValuePair("user_id", Integer.toString(player1
 				.getPlayerID())));
-
+		
 		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
 		myRequest.setRequestObserver(new RequestObserver() {
 
@@ -391,7 +391,10 @@ public class ServerConnection {
 
 	public static void updateNameAndScore(final String newName, final int newScore) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("request_type", "update_name_and_score"));
+		pairs.add(new BasicNameValuePair("request_type", "update"));
+		
+		pairs.add(new BasicNameValuePair("user_id", Integer.toString(GameManager.getInstance().mainActivity.
+				getPlayer().getPlayerID())));
 		pairs.add(new BasicNameValuePair("new_name", newName));
 		pairs.add(new BasicNameValuePair("new_score", Integer.toString(newScore)));
 

@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.InputFilter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,9 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 //import android.graphics.Rect;
-
-
 
 public class MainActivity extends Activity {
 	
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
 	private static SharedPreferences preferences;
 	private static SharedPreferences.Editor editor;
 
-//	private Handler handler;
+	private Handler handler;
 
 	
 	boolean firstTime;
@@ -69,7 +70,7 @@ public class MainActivity extends Activity {
 		
 		setPrefs();
 
-//		createHandler();
+		createHandler();
 
 		Greeting = new TextView(this);
 		dm = new DisplayMetrics();
@@ -97,7 +98,7 @@ public class MainActivity extends Activity {
 		
 	}
 	
-/*	private void createHandler() {
+	private void createHandler() {
 		handler = new Handler() {
 			// Create handleMessage function
 			public void handleMessage(Message msg) {
@@ -126,8 +127,6 @@ public class MainActivity extends Activity {
 		
 		ServerConnection.setHandler(handler);
 	}
-*/
-
 	
 	private void createLayout(int screenWidth, int screenHeight) {
 
