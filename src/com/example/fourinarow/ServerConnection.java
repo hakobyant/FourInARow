@@ -14,10 +14,10 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 public class ServerConnection {
 	
@@ -50,12 +50,6 @@ public class ServerConnection {
 			// TODO Auto-generated constructor stub
 			stringCommand = str;
 			pairs = p;
-		}
-		public MyRequest(String str, List<NameValuePair> p, RequestObserver r) {
-			// TODO Auto-generated constructor stub
-			stringCommand = str;
-			pairs = p;
-			requestObserver = r;
 		}
 		
 		public void setRequestObserver(RequestObserver requestObs){
@@ -239,12 +233,12 @@ public class ServerConnection {
 					
 				}
 				else {
-					
-					player1.getCurrentOpponentPlayer().setPlayer(Integer.parseInt(retrievedResponse.get(last)[0]),
+					Player opponent = new Player();
+					opponent.setPlayer(Integer.parseInt(retrievedResponse.get(last)[0]),
 													retrievedResponse.get(last)[1],
 													Integer.parseInt(retrievedResponse.get(last)[2]));
 					
-					GameProcessActivity.startGameWith(player1.getCurrentOpponentPlayer());
+					GameProcessActivity.startGameWith(opponent);
 				}
 
 			}
@@ -307,7 +301,7 @@ public class ServerConnection {
 				
 				//  In the case of 		message = "Game" and was able to add in the table, i.e. start a game with.
 				else if(response.compareTo(SUCCESSFUL) == 0){
-					
+					GameProcessActivity.startGameWith(player2);
 				}
 				else {
 					//Do the Move, Draw the Move
@@ -336,6 +330,7 @@ public class ServerConnection {
 	 * 
 	 */
 	public static void getMove(final Player player1) {
+		
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 	    pairs.add(new BasicNameValuePair("user_id", Integer.toString(player1.getPlayerID())));
 
@@ -381,6 +376,8 @@ public class ServerConnection {
 			@Override
 			public void onSuccess(String response) {
 				// TODO Auto-generated method stub
+				
+				SettingsActivity.goToMainActivity();
 
 			}
 

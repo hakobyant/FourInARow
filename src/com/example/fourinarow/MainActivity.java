@@ -68,9 +68,10 @@ public class MainActivity extends Activity {
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		player = new Player();
+		
 		setPrefs();
 
-		createHandler();
+//		createHandler();
 
 		Greeting = new TextView(this);
 		dm = new DisplayMetrics();
@@ -89,7 +90,6 @@ public class MainActivity extends Activity {
 
 		
 		createLayout(dm.widthPixels,dm.heightPixels);
-			
 	}
 	
 	private void setPrefs() {

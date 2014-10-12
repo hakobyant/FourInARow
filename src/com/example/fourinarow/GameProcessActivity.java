@@ -223,14 +223,10 @@ public boolean onTouchEvent(MotionEvent event) {
 	 * 'opponentID':'opponentUsername':'opponentScore'
 	 * 
 	 */
-	public static void startGameWith(int opponentID, String opponentUsername,
-			int opponentScore) {
+	public static void startGameWith(final Player currentOpponentPlayer) {
 		// TODO Auto-generated method stub
+		MainActivity.getPlayer().setCurrentOpponentPlayer(currentOpponentPlayer);
 		
-	}
-
-	public static void startGameWith(Player currentOpponentPlayer) {
-		// TODO Auto-generated method stub
 		
 	}
 
