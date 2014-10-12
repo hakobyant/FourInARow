@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +28,9 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		ServerConnection.activePlayersConnection(MainActivity.getPlayer());
+		GameManager.getInstance().pickOpponentActivity = this;
+		
+		ServerConnection.activePlayersConnection(GameManager.getInstance().mainActivity.getPlayer());
 		createPickOpponentLayout();
 	}
 	
@@ -78,7 +79,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		
 	}
 	
-	public static void updatePlayerTable(List<String[]> retrievedResponse) {
+	public void updatePlayerTable(List<String[]> retrievedResponse) {
 		// TODO Auto-generated method stub
 		
 	}

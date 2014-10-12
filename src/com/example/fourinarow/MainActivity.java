@@ -8,8 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.InputFilter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 //import android.graphics.Rect;
 
 
@@ -40,13 +37,15 @@ public class MainActivity extends Activity {
 	public static final int DEFAULT_SCORE = 1000;
 	
 
+	PickOpponentActivity pickOpponentActivity;
+	
 
 	private static Player player;
 	
 	private static SharedPreferences preferences;
 	private static SharedPreferences.Editor editor;
 
-	private Handler handler;
+//	private Handler handler;
 
 	
 	boolean firstTime;
@@ -65,6 +64,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+		GameManager.getInstance().mainActivity = this;
 		player = new Player();
 		
 		setPrefs();
@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	private void createHandler() {
+/*	private void createHandler() {
 		handler = new Handler() {
 			// Create handleMessage function
 			public void handleMessage(Message msg) {
@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
 		
 		ServerConnection.setHandler(handler);
 	}
-
+*/
 
 	
 	private void createLayout(int screenWidth, int screenHeight) {
@@ -249,12 +249,12 @@ public class MainActivity extends Activity {
 		firstTime = false;
 	}
 
-	public static void updateScreen(String response) {
+	public void updateScreen(String response) {
 		// TODO Auto-generated method stub
 	}
 
 
-	public static void updateUserInfo(String response) {
+	public void updateUserInfo(String response) {
 		// TODO Auto-generated method stub
 		String[] parsedResponse = response.split("[:]");
 		editor.putInt(ID, Integer.parseInt(parsedResponse[0]));
@@ -267,7 +267,7 @@ public class MainActivity extends Activity {
 						Integer.parseInt(parsedResponse[2]));
 	}
 	
-	public static void updateCurrentOpponentInfo(String response) {
+	public void updateCurrentOpponentInfo(String response) {
 		String[] parsedResponse = response.split("[:]");
 	
 		player.getCurrentOpponentPlayer().setPlayer(Integer.parseInt(parsedResponse[0]),
@@ -276,12 +276,12 @@ public class MainActivity extends Activity {
 
 	}
 	
-	public static void updateUserScore(String response) {
+	public void updateUserScore(String response) {
 		// TODO Auto-generated method stub
 	}
 
 
-	public static Player getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
@@ -292,7 +292,7 @@ public class MainActivity extends Activity {
 	 * not available any more. Playing another game.
 	 * 
 	 */
-	public static void UserIsAlreadyPlaying(Player player2) {
+	public void userIsAlreadyPlaying(Player player2) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -302,9 +302,8 @@ public class MainActivity extends Activity {
 	 * Get the online players and update the table
 	 */
 	
-	public static void calculateNewScore(final int score1, final int score2) {
+	public void calculateNewScore(final int score1, final int score2) {
 		
 	}
 
-	
 }

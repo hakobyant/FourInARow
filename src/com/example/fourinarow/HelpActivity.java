@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -27,6 +26,8 @@ public class HelpActivity extends Activity implements OnClickListener{
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			
+			GameManager.getInstance().helpActivity = this;
 			
 			HelpLayout = new RelativeLayout(this);
 			HelpLayout.setBackgroundResource(R.drawable.background);// Sets the background of the UI

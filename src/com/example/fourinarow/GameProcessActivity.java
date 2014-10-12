@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -47,6 +46,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+		GameManager.getInstance().gameProcessActivity = this;
 		
     	DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -223,9 +224,9 @@ public boolean onTouchEvent(MotionEvent event) {
 	 * 'opponentID':'opponentUsername':'opponentScore'
 	 * 
 	 */
-	public static void startGameWith(final Player currentOpponentPlayer) {
+	public void startGameWith(final Player currentOpponentPlayer) {
 		// TODO Auto-generated method stub
-		MainActivity.getPlayer().setCurrentOpponentPlayer(currentOpponentPlayer);
+		GameManager.getInstance().mainActivity.getPlayer().setCurrentOpponentPlayer(currentOpponentPlayer);
 		
 		
 	}
