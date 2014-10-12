@@ -21,8 +21,8 @@ import android.widget.TextView;
 public class PickOpponentActivity extends Activity implements OnClickListener{
 	RelativeLayout PickOpponentLayout;
 	LinearLayout BackButtonLayout;
-	TableLayout players = new TableLayout(this);
-	ArrayList<TableRow> formats = new ArrayList<TableRow>();
+	TableLayout players;
+	ArrayList<TableRow> formats;
 	Button backButton;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,6 +33,8 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		
 	}
 	private void createPickOpponentLayout() {
+		players = new TableLayout(this);
+		formats = new ArrayList<TableRow>();
 		PickOpponentLayout = new RelativeLayout(this);
 		PickOpponentLayout.setBackgroundResource(R.drawable.background);// Sets the background of the UI
 		
@@ -65,7 +67,6 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		
 		this.setContentView(PickOpponentLayout);
 	
-		
 	}
 	
 	@Override
