@@ -48,11 +48,11 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		BackButtonLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 		BackButtonLayout.addView(backButton);
 		
-		TextView Rules = new TextView(this);
-		Rules.setTextSize(30);
-		Rules.setText("Player 1\nPlayer 2\nPlayer 3");
-		Rules.setPadding(10, 80, 10, 0);
-		Rules.setOnClickListener(new OnClickListener() {
+		//TextView Rules = new TextView(this);
+		//Rules.setTextSize(30);
+		//Rules.setText("Player 1\nPlayer 2\nPlayer 3");
+		//Rules.setPadding(10, 80, 10, 0);
+		/*Rules.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -65,6 +65,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		Rules.setGravity(Gravity.CENTER);
 		Rules.setMovementMethod(new ScrollingMovementMethod());
 		PickOpponentLayout.addView(Rules);
+		*/
 		PickOpponentLayout.addView(BackButtonLayout);
 		
 		this.setContentView(PickOpponentLayout);
@@ -79,20 +80,22 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		
 	}
 	
-	public String name;
+	
 	public Player opponent;
+	public String name;
+	public int score;
+	
 	public void updatePlayerTable(final List<Player> retrievedResponse) {
 		// TODO Auto-generated method stub
-		for (int i = 0; i < retrievedResponse.size(); i++) {
+		for (int i = 0; i < retrievedResponse.size()-1; i++) {
 			TableRow newPlayerRow = new TableRow(this);
 			TextView newTextView = new TextView(this);
 			newTextView.setText(i + retrievedResponse.get(i).getPlayerUsername());
 			newPlayerRow.addView(newTextView);
-			name = retrievedResponse.get(i).getPlayerUsername();
 			opponent = retrievedResponse.get(i);
+			name = retrievedResponse.get(i).getPlayerUsername();
+			score = retrievedResponse.get(i).getPlayerScore();
 			newTextView.setOnClickListener(new OnClickListener() {
-				
-					
 				
 			@Override
 				public void onClick(View v) {
@@ -100,14 +103,15 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 					Intent PickOpponentIntent = new Intent(PickOpponentActivity.this, GameProcessActivity.class);
 					startActivity(PickOpponentIntent);
 					PickOpponentIntent.putExtra("Name", name);
+					PickOpponentIntent.putExtra("Score", score);
 					ServerConnection.requestGameWith(GameManager.getInstance().mainActivity.getPlayer(), opponent);
 				}
 			});
 			players.addView(newPlayerRow);
 			
 		}
-
-		
+		PickOpponentLayout.addView(players);
+		//PickOpponentLayout.setMovementMethod(new ScrollingMovementMethod());
 	}
 
 
