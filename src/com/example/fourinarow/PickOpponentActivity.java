@@ -88,25 +88,27 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 	public void updatePlayerTable(final List<Player> retrievedResponse) {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < retrievedResponse.size()-1; i++) {
-			TableRow newPlayerRow = new TableRow(this);
-			TextView newTextView = new TextView(this);
-			newTextView.setText(i + retrievedResponse.get(i).getPlayerUsername());
-			newPlayerRow.addView(newTextView);
 			opponent = retrievedResponse.get(i);
 			name = retrievedResponse.get(i).getPlayerUsername();
 			score = retrievedResponse.get(i).getPlayerScore();
+			TableRow newPlayerRow = new TableRow(this);
+			TextView newTextView = new TextView(this);
 			newTextView.setOnClickListener(new OnClickListener() {
 				
-			@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent PickOpponentIntent = new Intent(PickOpponentActivity.this, GameProcessActivity.class);
-					startActivity(PickOpponentIntent);
-					PickOpponentIntent.putExtra("Name", name);
-					PickOpponentIntent.putExtra("Score", score);
-					ServerConnection.requestGameWith(GameManager.getInstance().mainActivity.getPlayer(), opponent);
-				}
-			});
+				@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent PickOpponentIntent = new Intent(PickOpponentActivity.this, GameProcessActivity.class);
+						startActivity(PickOpponentIntent);
+						PickOpponentIntent.putExtra("Name", name);
+						PickOpponentIntent.putExtra("Score", score);
+						ServerConnection.requestGameWith(GameManager.getInstance().mainActivity.getPlayer(), opponent);
+					}
+				});
+			newTextView.setText(i + retrievedResponse.get(i).getPlayerUsername());
+			newPlayerRow.addView(newTextView);
+			
+			
 			players.addView(newPlayerRow);
 			
 		}

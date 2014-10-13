@@ -8,8 +8,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -42,14 +44,24 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		settingsLayout = new RelativeLayout(this);
-		settingsLayout.setPadding(dm.widthPixels / 8, dm.heightPixels / 4,
+		settingsLayout.setPadding(dm.widthPixels / 8, dm.heightPixels / 5,
 				dm.widthPixels / 8, 0);
 		settingsLayout.setBackgroundResource(R.drawable.background);
 		form = new TableLayout(this);
 		nameRow = new TableRow(this);
 		TextView nameTag = new TextView(this);
 		nameEdit = new EditText(this);
-		// nameEdit.setText(MainActivity.Player.playerUsername);
+		InputFilter[] filterArray = new InputFilter[1];
+		filterArray[0] = new InputFilter.LengthFilter(15);
+		nameEdit.setFilters(filterArray);
+		nameEdit.setHint("Type Here");
+		nameEdit.setOnKeyListener(new EditText.OnKeyListener() {
+		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+	            return (keyCode == KeyEvent.KEYCODE_ENTER);
+	        }
+	    });
+		nameEdit.setText(GameManager.getInstance().mainActivity.getPlayer().getPlayerUsername());
 		nameTag.setText("Edit Your Name");
 		nameRow.addView(nameTag);
 		nameRow.addView(nameEdit);
@@ -65,6 +77,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		colorList.add("Red");
 		colorList.add("Yellow");
 		colorList.add("Blue");
+		colorList.add("Green");
+		colorList.add("Black");
 
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
 				this, android.R.layout.simple_spinner_item, colorList);
