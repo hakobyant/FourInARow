@@ -13,10 +13,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class ServerConnection {
 	final static String SEND_MESSAGE = "send_message";
@@ -24,6 +28,9 @@ public class ServerConnection {
 	final static String SEND_USER = "send_user";
 	final static String UNSUCCESSFUL = "Unsuccessful";
 	final static String SUCCESSFUL = "Successful";
+	public static final int CONNECTION_TIMEOUT = 120000;
+	public static final int WAIT_RESPONSE_TIMEOUT = 120000;
+	private static final HttpParams timeoutParams;
 
 	private static ArrayList<MyRequest> requestQueue = new ArrayList<ServerConnection.MyRequest>();
 	private static RequestThread myRequestThread = new RequestThread();
@@ -34,6 +41,13 @@ public class ServerConnection {
 
 	static {
 		myRequestThread.start();
+
+		timeoutParams = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(timeoutParams,
+				CONNECTION_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(timeoutParams, WAIT_RESPONSE_TIMEOUT);
+		HttpConnectionParams.setTcpNoDelay(timeoutParams, true);
+
 	}
 
 	private static class MyRequest {
@@ -72,15 +86,21 @@ public class ServerConnection {
 		return realMessage;
 	}
 
-	public static List<String[]> retrieveMessage(String str) {
+	public static List<Player> retrievePlayers(String str) {
 
 		String[] info = str.split("[;]");
+		List<Player> realPlayers = new ArrayList<Player>(info.length);
 		List<String[]> realMessage = new ArrayList<String[]>(info.length);
 
 		for (int i = 0; i < info.length; i++)
 			realMessage.add(info[i].split("[:]"));
 
-		return realMessage;
+		for (int i = 0; i < info.length; i++)
+			realPlayers.add(new Player(
+					Integer.parseInt(realMessage.get(i)[0]),
+					realMessage.get(i)[1],
+					Integer.parseInt(realMessage.get(i)[2])));
+		return realPlayers;
 	}
 
 	private static class RequestThread extends Thread {
@@ -163,13 +183,15 @@ public class ServerConnection {
 			public void onSuccess(final String response) {
 				// TODO Auto-generated method stub
 
-				GameManager.getInstance().mainActivity.runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						GameManager.getInstance().mainActivity.updateUserInfo(response);
-					}
-				});
+				GameManager.getInstance().mainActivity
+						.runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								GameManager.getInstance().mainActivity
+										.updateUserInfo(response);
+							}
+						});
 
 				/*
 				 * 
@@ -213,43 +235,37 @@ public class ServerConnection {
 		pairs.add(new BasicNameValuePair("request_type", "start_game_screen"));
 		pairs.add(new BasicNameValuePair("user_id", Integer.toString(player1
 				.getPlayerID())));
-		
+
 		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
 		myRequest.setRequestObserver(new RequestObserver() {
 
 			@Override
 			public void onSuccess(final String response) {
 				// TODO Auto-generated method stub
-				
-				GameManager.getInstance().pickOpponentActivity.runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						List<String[]> retrievedResponse = retrieveMessage(response);
-						int last = retrievedResponse.size() - 1;
 
-						
-						GameManager.getInstance().pickOpponentActivity.updatePlayerTable(retrievedResponse);
+				GameManager.getInstance().pickOpponentActivity
+						.runOnUiThread(new Runnable() {
 
-						if (retrievedResponse.get(last)[0].compareTo("-1") == 0) {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								List<Player> retrievedResponse = retrievePlayers(response);
+								int last = retrievedResponse.size() - 1;
 
-							// do again
-							activePlayersConnection(player1);
+								GameManager.getInstance().pickOpponentActivity
+										.updatePlayerTable(retrievedResponse);
 
-						} else {
-							Player opponent = new Player();
-							opponent.setPlayer(
-									Integer.parseInt(retrievedResponse.get(last)[0]),
-									retrievedResponse.get(last)[1],
-									Integer.parseInt(retrievedResponse.get(last)[2]));
+								if (retrievedResponse.get(last).getPlayerID() == -1) {
+									// do again
+									activePlayersConnection(player1);
 
-							GameManager.getInstance().gameProcessActivity.startGameWith(opponent);
-						}
-						
-					}
-				});
-				
+								} else {
+									GameManager.getInstance().gameProcessActivity
+											.startGameWith(retrievedResponse.get(last));
+								}
+
+							}
+						});
 
 			}
 
@@ -274,7 +290,8 @@ public class ServerConnection {
 	 * send_message.php DOES NOT allow to have 2 different players request a
 	 * game to the same user.
 	 */
-	public static void requestGameWith(final Player player1, final Player player2) {
+	public static void requestGameWith(final Player player1,
+			final Player player2) {
 		sendMove(player1, player2, "Game");
 	}
 
@@ -288,7 +305,8 @@ public class ServerConnection {
 	 * 
 	 * Gets "Unsuccessful" if seconUserID already got an invitation.
 	 */
-	public static void sendMove(final Player player1, final Player player2, final String message) {
+	public static void sendMove(final Player player1, final Player player2,
+			final String message) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("first_user_id", Integer
 				.toString(player1.getPlayerID())));
@@ -326,7 +344,8 @@ public class ServerConnection {
 								@Override
 								public void run() {
 									// TODO Auto-generated method stub
-									GameManager.getInstance().gameProcessActivity.startGameWith(player2);
+									GameManager.getInstance().gameProcessActivity
+											.startGameWith(player2);
 								}
 							});
 				} else {
@@ -364,14 +383,17 @@ public class ServerConnection {
 			public void onSuccess(final String response) {
 				// TODO Auto-generated method stub
 
-				GameManager.getInstance().mainActivity.runOnUiThread(new Runnable() {
+				GameManager.getInstance().mainActivity
+						.runOnUiThread(new Runnable() {
 
 							@Override
 							public void run() {
-								GameManager.getInstance().mainActivity.updateScreen(response);
+								GameManager.getInstance().mainActivity
+										.updateScreen(response);
 							}
 						});
 			}
+
 			@Override
 			public void onFailure(IOException e) {
 				// TODO Auto-generated method stub
@@ -382,21 +404,26 @@ public class ServerConnection {
 	}
 
 	public static void updateScore(final int newScore) {
-		updateNameAndScore(GameManager.getInstance().mainActivity.getPlayer().getPlayerUsername(), newScore);
+		updateNameAndScore(GameManager.getInstance().mainActivity.getPlayer()
+				.getPlayerUsername(), newScore);
 	}
 
 	public static void updateName(final String newName) {
-		updateNameAndScore(newName, GameManager.getInstance().mainActivity.getPlayer().getPlayerScore());
+		updateNameAndScore(newName, GameManager.getInstance().mainActivity
+				.getPlayer().getPlayerScore());
 	}
 
-	public static void updateNameAndScore(final String newName, final int newScore) {
+	public static void updateNameAndScore(final String newName,
+			final int newScore) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("request_type", "update"));
-		
-		pairs.add(new BasicNameValuePair("user_id", Integer.toString(GameManager.getInstance().mainActivity.
-				getPlayer().getPlayerID())));
+
+		pairs.add(new BasicNameValuePair("user_id", Integer
+				.toString(GameManager.getInstance().mainActivity.getPlayer()
+						.getPlayerID())));
 		pairs.add(new BasicNameValuePair("new_name", newName));
-		pairs.add(new BasicNameValuePair("new_score", Integer.toString(newScore)));
+		pairs.add(new BasicNameValuePair("new_score", Integer
+				.toString(newScore)));
 
 		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
 		myRequest.setRequestObserver(new RequestObserver() {
@@ -405,12 +432,14 @@ public class ServerConnection {
 			public void onSuccess(String response) {
 				// TODO Auto-generated method stub
 
-				GameManager.getInstance().settingsActivity.runOnUiThread(new Runnable() {
+				GameManager.getInstance().mainActivity
+						.runOnUiThread(new Runnable() {
 
 							@Override
 							public void run() {
 								// TODO Auto-generated method stub
-								GameManager.getInstance().settingsActivity.goToMainActivity();
+								GameManager.getInstance().mainActivity
+										.goToPickOpponentActivity();
 
 							}
 						});
@@ -420,6 +449,7 @@ public class ServerConnection {
 			@Override
 			public void onFailure(IOException e) {
 				// TODO Auto-generated method stub
+				Log.i("Vasa", "Tigran");
 
 			}
 		});

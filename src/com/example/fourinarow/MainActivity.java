@@ -157,13 +157,12 @@ public class MainActivity extends Activity {
 		
 		startGameButton = new Button(this);
 		startGameButton.setWidth(buttonWidth);
-		startGameButton.setOnClickListener(new OnClickListener() {//Goes to GameProcessActivity
+		startGameButton.setOnClickListener(new OnClickListener() {//Goes to PickOpponentActivity
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent PickOpponentIntent = new Intent(MainActivity.this, PickOpponentActivity.class);
-				startActivity(PickOpponentIntent);
+				ServerConnection.updateNameAndScore(player.getPlayerUsername(), player.getPlayerScore());		
 			}
 		});
 		startGameButton.setText("Start Game");
@@ -252,6 +251,10 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 	}
 
+	public void goToPickOpponentActivity() {
+		Intent PickOpponentIntent = new Intent(MainActivity.this, PickOpponentActivity.class);
+		startActivity(PickOpponentIntent);
+	}
 
 	public void updateUserInfo(String response) {
 		// TODO Auto-generated method stub

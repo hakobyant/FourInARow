@@ -20,6 +20,14 @@ public class Player {
 		opponentColor = "Yellow";
 		isSoundOn = true;
 	}
+	public Player(final int id, final String username, final int score) {
+		playerID = id;
+		playerUsername = username;
+		playerScore = score;
+		playerColor = "Red";
+		opponentColor = "Yellow";
+		isSoundOn = true;		
+	}
 
 	public int getPlayerID() {
 		return playerID;

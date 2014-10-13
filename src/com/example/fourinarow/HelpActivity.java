@@ -27,7 +27,7 @@ public class HelpActivity extends Activity implements OnClickListener{
 			super.onCreate(savedInstanceState);
 			setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			
-//			GameManager.getInstance().helpActivity = this;
+			GameManager.getInstance().helpActivity = this;
 			
 			HelpLayout = new RelativeLayout(this);
 			HelpLayout.setBackgroundResource(R.drawable.background);// Sets the background of the UI

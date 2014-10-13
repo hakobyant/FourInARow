@@ -3,7 +3,7 @@ package com.example.fourinarow;
 public class GameManager {
 	private static GameManager instance = null;
 	public GameProcessActivity gameProcessActivity;
-//	public HelpActivity helpActivity;
+	public HelpActivity helpActivity;
 	public MainActivity mainActivity;
 	public PickOpponentActivity pickOpponentActivity;
 	public SettingsActivity settingsActivity;
