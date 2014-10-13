@@ -308,4 +308,11 @@ public class MainActivity extends Activity {
 		
 	}
 
+	public void startGameWith(Player player2) {
+		Intent intent = new Intent(this, GameProcessActivity.class);
+		startActivity(intent);
+		GameManager.getInstance().gameProcessActivity.startGameWith(player2);
+		
+	}
+
 }

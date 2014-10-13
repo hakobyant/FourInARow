@@ -34,10 +34,12 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 	}
 	
 	private void createPickOpponentLayout() {
-		players = new TableLayout(this);
 		
 		PickOpponentLayout = new RelativeLayout(this);
 		PickOpponentLayout.setBackgroundResource(R.drawable.background);// Sets the background of the UI
+		
+		players = new TableLayout(this);
+
 		
 		backButton = new Button(this);
 		backButton.setText("Back To Main Menu");
@@ -111,6 +113,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 			players.addView(newPlayerRow);
 			
 		}
+		players.removeView(PickOpponentLayout);
 		PickOpponentLayout.addView(players);
 		//PickOpponentLayout.setMovementMethod(new ScrollingMovementMethod());
 	}

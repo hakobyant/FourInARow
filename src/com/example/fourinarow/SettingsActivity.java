@@ -141,7 +141,6 @@ public class SettingsActivity extends Activity implements OnClickListener {
 			GameManager.getInstance().mainActivity.updateUserInfo(response);
 			Log.i("Vasa",response);
 			goToMainActivity();
-			ServerConnection.updateName(nameEdit.getText().toString());
 		} else {
 			if (prefColorSpinner.getSelectedItem() == opponentColorSpinner
 					.getSelectedItem()) {

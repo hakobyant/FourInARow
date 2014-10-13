@@ -339,13 +339,13 @@ public class ServerConnection {
 				// In the case of message = "Game" and was able to add in the
 				// table, i.e. start a game with.
 				else if (response.compareTo(SUCCESSFUL) == 0) {
-					GameManager.getInstance().gameProcessActivity
+					GameManager.getInstance().mainActivity
 							.runOnUiThread(new Runnable() {
 
 								@Override
 								public void run() {
 									// TODO Auto-generated method stub
-									GameManager.getInstance().gameProcessActivity
+									GameManager.getInstance().mainActivity
 											.startGameWith(player2);
 								}
 							});
