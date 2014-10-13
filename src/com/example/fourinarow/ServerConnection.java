@@ -28,9 +28,6 @@ public class ServerConnection {
 	final static String SEND_USER = "send_user";
 	final static String UNSUCCESSFUL = "Unsuccessful";
 	final static String SUCCESSFUL = "Successful";
-	public static final int CONNECTION_TIMEOUT = 120000;
-	public static final int WAIT_RESPONSE_TIMEOUT = 120000;
-	private static final HttpParams timeoutParams;
 
 	private static ArrayList<MyRequest> requestQueue = new ArrayList<ServerConnection.MyRequest>();
 	private static RequestThread myRequestThread = new RequestThread();
@@ -41,13 +38,6 @@ public class ServerConnection {
 
 	static {
 		myRequestThread.start();
-
-		timeoutParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(timeoutParams,
-				CONNECTION_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(timeoutParams, WAIT_RESPONSE_TIMEOUT);
-		HttpConnectionParams.setTcpNoDelay(timeoutParams, true);
-
 	}
 
 	private static class MyRequest {
@@ -177,21 +167,30 @@ public class ServerConnection {
 		pairs.add(new BasicNameValuePair("username", phoneName));
 
 		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
+		Log.i("Vasa",phoneName);
+
 		myRequest.setRequestObserver(new RequestObserver() {
+
 
 			@Override
 			public void onSuccess(final String response) {
 				// TODO Auto-generated method stub
 
-				GameManager.getInstance().mainActivity
-						.runOnUiThread(new Runnable() {
+				GameManager.getInstance().mainActivity.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Log.i("Vasa","update User Info");
 
-							@Override
-							public void run() {
-								GameManager.getInstance().mainActivity
-										.updateUserInfo(response);
-							}
-						});
+						GameManager.getInstance().mainActivity
+								.updateUserInfo(response);
+						Log.i("Vasa","update User Info");
+						
+					}
+				});
+								
+		
 
 				/*
 				 * 
@@ -204,6 +203,8 @@ public class ServerConnection {
 
 			@Override
 			public void onFailure(IOException e) {
+				Log.e("Vasa","Failed");
+				Log.e("Vasa",e.getMessage());
 				// TODO Auto-generated method stub
 
 			}
