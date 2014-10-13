@@ -44,7 +44,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	boolean turn = true;
 	int[][] board = new int[7][6];
 	TextView turnIndicator;
-
+	String playerColor = GameManager.getInstance().mainActivity.getPlayer().getPlayerColor();
+	String opponentColor = GameManager.getInstance().mainActivity.getPlayer().getOpponentColor();
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -69,14 +70,14 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					cellSize, cellSize);
 
 			params1.setMargins(cellSize, cellSize, 0, 0);
-			inputs = this.getResources().getAssets().open("red.png");
+			inputs = this.getResources().getAssets().open(playerColor);
 			icon = BitmapFactory.decodeStream(inputs);
 			ImageView image1 = new ImageView(this);
 			image1.setImageBitmap(icon);
 			GameLayout.addView(image1, params1);
 
 			params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
-			inputs = this.getResources().getAssets().open("yellow.png");
+			inputs = this.getResources().getAssets().open(opponentColor);
 			icon = BitmapFactory.decodeStream(inputs);
 			ImageView image2 = new ImageView(this);
 			image2.setImageBitmap(icon);
@@ -291,9 +292,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 							cellSize, cellSize);
 					iconParams.setMargins(cellSize * (i + 1), place + (6 - j)
 							* cellSize, 0, 0);
+					
 					// iconParams.setMargins(0,0,0,0);
 					inputs = this.getResources().getAssets()
-							.open(turn ? "red.png" : "yellow.png");
+							.open(turn ? playerColor : opponentColor);
 					icon = BitmapFactory.decodeStream(inputs);
 					image = new ImageView(this);
 					image.setImageBitmap(icon);

@@ -215,7 +215,7 @@ public class MainActivity extends Activity {
 		//dialog.getWindow().setLayout(screenWidth/3, screenHeight/3);
 		LinearLayout dialogLayout = new LinearLayout(this);
 		InputFilter[] filterArray = new InputFilter[1];
-		filterArray[0] = new InputFilter.LengthFilter(20);
+		filterArray[0] = new InputFilter.LengthFilter(15);
 		enterName = new EditText(this);
 		enterName.setFilters(filterArray);
 		enterName.setHint("Type here");
