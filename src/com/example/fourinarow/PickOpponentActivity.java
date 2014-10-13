@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -105,7 +104,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 						ServerConnection.requestGameWith(GameManager.getInstance().mainActivity.getPlayer(), opponent);
 					}
 				});
-			newTextView.setText(i + retrievedResponse.get(i).getPlayerUsername());
+			newTextView.setText(i + ". " + retrievedResponse.get(i).getPlayerUsername() + "(" + score + ")");
 			newPlayerRow.addView(newTextView);
 			
 			

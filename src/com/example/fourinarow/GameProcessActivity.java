@@ -100,7 +100,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 		secondName = new TextView(this);
 		secondName.setTextSize(22);
-		secondName.setText("Your Opponent");
+		secondName.setText(getIntent().getStringExtra("Name"));
 		secondName.setPadding(3 * cellSize, 3 * cellSize / 4, 0, 0);
 		secondPlayer.addView(secondName);
 
