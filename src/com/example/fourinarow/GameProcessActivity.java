@@ -186,6 +186,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 				Dialog dialog = new Dialog(this);
 				if (isGameDraw()) {
 					dialog.setTitle("Draw");
+					
 				} else {
 					dialog.setTitle(!turn ? "You Won" : "You Lost");
 				}

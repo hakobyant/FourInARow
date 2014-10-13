@@ -22,7 +22,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 	RelativeLayout PickOpponentLayout;
 	LinearLayout BackButtonLayout;
 	TableLayout players;
-	ArrayList<TableRow> formats;
+	ArrayList<TableRow> playerRows;
 	Button backButton;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,7 +36,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 	
 	private void createPickOpponentLayout() {
 		players = new TableLayout(this);
-		formats = new ArrayList<TableRow>();
+		
 		PickOpponentLayout = new RelativeLayout(this);
 		PickOpponentLayout.setBackgroundResource(R.drawable.background);// Sets the background of the UI
 		
@@ -79,8 +79,34 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		
 	}
 	
-	public void updatePlayerTable(List<String[]> retrievedResponse) {
+	public String name;
+	public Player opponent;
+	public void updatePlayerTable(final List<Player> retrievedResponse) {
 		// TODO Auto-generated method stub
+		for (int i = 0; i < retrievedResponse.size(); i++) {
+			TableRow newPlayerRow = new TableRow(this);
+			TextView newTextView = new TextView(this);
+			newTextView.setText(i + retrievedResponse.get(i).getPlayerUsername());
+			newPlayerRow.addView(newTextView);
+			name = retrievedResponse.get(i).getPlayerUsername();
+			opponent = retrievedResponse.get(i);
+			newTextView.setOnClickListener(new OnClickListener() {
+				
+					
+				
+			@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent PickOpponentIntent = new Intent(PickOpponentActivity.this, GameProcessActivity.class);
+					startActivity(PickOpponentIntent);
+					PickOpponentIntent.putExtra("Name", name);
+					ServerConnection.requestGameWith(GameManager.getInstance().mainActivity.getPlayer(), opponent);
+				}
+			});
+			players.addView(newPlayerRow);
+			
+		}
+
 		
 	}
 
