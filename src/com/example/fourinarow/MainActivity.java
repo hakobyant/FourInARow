@@ -1,6 +1,5 @@
 package com.example.fourinarow;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -25,30 +24,38 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 //import android.graphics.Rect;
 
 public class MainActivity extends Activity {
-	
+
 	final static String ID = "ID";
 	final static String USERNAME = "USERNAME";
 	final static String SCORE = "SCORE";
+	final static String PLAYER_COLOR = "PlayerColor";
+	final static String OPPONENT_COLOR = "OpponentColor";
+	final static String IS_SOUND_ON = "IsSoundOn";
+
+	final static String RED = "red.png";
+	final static String YELLOW = "yellow.png";
+	final static String BLACK = "black.png";
+	final static String BLUE = "blue.png";
+	final static String GREEN = "green.png";
+
 	final static String SEND_MESSAGE = "send_message";
 	final static String GET_MESSAGE = "get_Message";
 	final static String SEND_USER = "send_user";
 	public static final int DEFAULT_SCORE = 1000;
-	
 
 	PickOpponentActivity pickOpponentActivity;
-	
 
 	private static Player player;
-	
+
 	private static SharedPreferences preferences;
 	private static SharedPreferences.Editor editor;
 
 	private Handler handler;
 
-	
 	boolean firstTime;
 	private static DisplayMetrics dm;
 	String PlayerName = "New Player";
@@ -59,15 +66,15 @@ public class MainActivity extends Activity {
 	TableRow GreetingRow, StartGameRow, HighScoresRow, SettingsRow, HelpRow;
 	EditText enterName;
 	Button startGameButton, highScoresButton, settingsButton, helpButton;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		GameManager.getInstance().mainActivity = this;
 		player = new Player();
-		
+
 		setPrefs();
 
 		createHandler();
@@ -76,65 +83,65 @@ public class MainActivity extends Activity {
 		dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-		if(preferences.getInt("ID", -1) == -1) {
+		if (preferences.getInt(ID, -1) == -1) {
 			createDialog();
-		}
-		else {
-			player.setPlayer(preferences.getInt("ID", -1), 
-							preferences.getString("Name", "Player"), 
-							preferences.getInt("Score", DEFAULT_SCORE));
+		} else {
+			player.setPlayer(preferences.getInt(ID, -1),
+					preferences.getString(USERNAME, "New Player"),
+					preferences.getInt(SCORE, DEFAULT_SCORE),
+					preferences.getString(PLAYER_COLOR, RED),
+					preferences.getString(OPPONENT_COLOR, YELLOW),
+					preferences.getBoolean(IS_SOUND_ON, true));
 
 			Greeting.setText("Hello " + player.getPlayerUsername());
 		}
 
-		
-		createLayout(dm.widthPixels,dm.heightPixels);
+		createLayout(dm.widthPixels, dm.heightPixels);
 	}
-	
+
 	private void setPrefs() {
 		// TODO Auto-generated method stub
 		preferences = getPreferences(0);
 		editor = preferences.edit();
-		
+
 	}
-	
+
 	private void createHandler() {
 		handler = new Handler() {
 			// Create handleMessage function
 			public void handleMessage(Message msg) {
-				String getMessageResponse = msg.getData().getString(GET_MESSAGE);
-				String sendMessageResponse = msg.getData().getString(SEND_MESSAGE);
+				String getMessageResponse = msg.getData()
+						.getString(GET_MESSAGE);
+				String sendMessageResponse = msg.getData().getString(
+						SEND_MESSAGE);
 				String userIDString = msg.getData().getString(SEND_USER);
-				
-				if(getMessageResponse == null && userIDString == null && sendMessageResponse == null) {
-					Toast.makeText(
-							getBaseContext(),
-							"Not Got Response From Server.",
-							Toast.LENGTH_SHORT).show();
-				}
-				else if (getMessageResponse != null) {
-					
-				}
-				else if (userIDString != null) {
 
-//					Log.i("Test",ServerConnection.doMessageProcess(userIDString));
-				}
-				else if (sendMessageResponse != null) {
-					
+				if (getMessageResponse == null && userIDString == null
+						&& sendMessageResponse == null) {
+					Toast.makeText(getBaseContext(),
+							"Not Got Response From Server.", Toast.LENGTH_SHORT)
+							.show();
+				} else if (getMessageResponse != null) {
+
+				} else if (userIDString != null) {
+
+					// Log.i("Test",ServerConnection.doMessageProcess(userIDString));
+				} else if (sendMessageResponse != null) {
+
 				}
 			}
 		};
-		
+
 		ServerConnection.setHandler(handler);
 	}
-	
+
 	private void createLayout(int screenWidth, int screenHeight) {
 
 		int buttonWidth = screenWidth / 2;
 		MainLayout = new RelativeLayout(this);
 		MainLayout.setBackgroundResource(R.drawable.background);
-		MainLayout.setPadding(screenWidth/4, screenHeight/4, 0, 0);
-		
+		MainLayout.setPadding(screenWidth / 4, screenHeight / 4, 0, 0);
+
 		GreetingRow = new TableRow(this);
 		GreetingRow.setPadding(0, 0, 0, 50);
 		Greeting = new TextView(this);
@@ -143,68 +150,77 @@ public class MainActivity extends Activity {
 		Greeting.setTypeface(Typeface.MONOSPACE);
 		Greeting.setGravity(Gravity.CENTER_HORIZONTAL);
 		GreetingRow.addView(Greeting);
-		
-		
-		
+
 		ButtonsLayout = new TableLayout(this);
-		
+
 		ButtonsLayout.addView(GreetingRow);
-		StartGameRow = new TableRow(this); ButtonsLayout.addView(StartGameRow);
-		HighScoresRow = new TableRow(this); ButtonsLayout.addView(HighScoresRow);
-		SettingsRow = new TableRow(this); ButtonsLayout.addView(SettingsRow);
-		HelpRow = new TableRow(this); ButtonsLayout.addView(HelpRow);
-		
-		
+		StartGameRow = new TableRow(this);
+		ButtonsLayout.addView(StartGameRow);
+		HighScoresRow = new TableRow(this);
+		ButtonsLayout.addView(HighScoresRow);
+		SettingsRow = new TableRow(this);
+		ButtonsLayout.addView(SettingsRow);
+		HelpRow = new TableRow(this);
+		ButtonsLayout.addView(HelpRow);
+
 		startGameButton = new Button(this);
 		startGameButton.setWidth(buttonWidth);
-		startGameButton.setOnClickListener(new OnClickListener() {//Goes to PickOpponentActivity
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				ServerConnection.updateNameAndScore(player.getPlayerUsername(), player.getPlayerScore());		
-			}
-		});
+		startGameButton.setOnClickListener(new OnClickListener() {// Goes to
+																	// PickOpponentActivity
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						if(player.getPlayerID() < 0)
+							ServerConnection.createNewUser(player.getPlayerUsername());
+						else
+							ServerConnection.updateNameAndScore(
+								player.getPlayerUsername(),
+								player.getPlayerScore());
+
+					}
+				});
 		startGameButton.setText("Start Game");
 		StartGameRow.addView(startGameButton);
-		
-		
+
 		highScoresButton = new Button(this);
 		highScoresButton.setWidth(buttonWidth);
-//		highScoresButton.setOnClickListener(this);
+		// highScoresButton.setOnClickListener(this);
 		highScoresButton.setText("Highscores");
 		HighScoresRow.addView(highScoresButton);
 
 		settingsButton = new Button(this);
 		settingsButton.setWidth(buttonWidth);
 		settingsButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent settingsIntent= new Intent(MainActivity.this, SettingsActivity.class);
+				Intent settingsIntent = new Intent(MainActivity.this,
+						SettingsActivity.class);
 				startActivity(settingsIntent);
 			}
 		});
-		
+
 		settingsButton.setText("Settings");
 		SettingsRow.addView(settingsButton);
-		
+
 		helpButton = new Button(this);
 		helpButton.setWidth(buttonWidth);
 		helpButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent HelpIntent = new Intent(MainActivity.this, HelpActivity.class);
+				Intent HelpIntent = new Intent(MainActivity.this,
+						HelpActivity.class);
 				startActivity(HelpIntent);
 			}
 		});
-		
+
 		helpButton.setText("Help");
 		HelpRow.addView(helpButton);
-		
+
 		MainLayout.addView(ButtonsLayout);
 		setContentView(MainLayout);
 	}
@@ -212,7 +228,7 @@ public class MainActivity extends Activity {
 	private void createDialog() {
 		dialog = new Dialog(this);
 		dialog.setTitle("Please Enter Your Name");
-		//dialog.getWindow().setLayout(screenWidth/3, screenHeight/3);
+		// dialog.getWindow().setLayout(screenWidth/3, screenHeight/3);
 		LinearLayout dialogLayout = new LinearLayout(this);
 		InputFilter[] filterArray = new InputFilter[1];
 		filterArray[0] = new InputFilter.LengthFilter(15);
@@ -220,29 +236,29 @@ public class MainActivity extends Activity {
 		enterName.setFilters(filterArray);
 		enterName.setHint("Type here");
 		enterName.setOnKeyListener(new EditText.OnKeyListener() {
-		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-	            return (keyCode == KeyEvent.KEYCODE_ENTER);
-	        }
-	    });
+				return (keyCode == KeyEvent.KEYCODE_ENTER);
+			}
+		});
 		dialogLayout.addView(enterName);
 		Button submitNameButton = new Button(this);
 		submitNameButton.setText("Submit");
 		submitNameButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				PlayerName = enterName.getText().toString();
 				Greeting.setText("Hello " + PlayerName);
 				dialog.dismiss();
-				ServerConnection.createNewUser(PlayerName);
-				Log.i("button ","is submitted");
+				updateUserInfo("-2:" + PlayerName + ":"
+						+ Integer.toString(DEFAULT_SCORE));
 			}
 		});
 		dialogLayout.addView(submitNameButton);
 		dialog.setContentView(dialogLayout);
-		
+
 		dialog.show();
 		firstTime = false;
 	}
@@ -252,7 +268,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void goToPickOpponentActivity() {
-		Intent PickOpponentIntent = new Intent(MainActivity.this, PickOpponentActivity.class);
+		Intent PickOpponentIntent = new Intent(MainActivity.this,
+				PickOpponentActivity.class);
 		startActivity(PickOpponentIntent);
 	}
 
@@ -260,28 +277,54 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		String[] parsedResponse = response.split("[:]");
 		editor.putInt(ID, Integer.parseInt(parsedResponse[0]));
-		editor.putString("Name", parsedResponse[1]);
+		editor.putString(USERNAME, parsedResponse[1]);
 		editor.putInt(SCORE, Integer.parseInt(parsedResponse[2]));
+		editor.putString(PLAYER_COLOR, RED);
+		editor.putString(OPPONENT_COLOR, YELLOW);
+		editor.putBoolean(IS_SOUND_ON, true);
 		editor.commit();
-		
+
 		player.setPlayer(Integer.parseInt(parsedResponse[0]),
-						parsedResponse[1],
-						Integer.parseInt(parsedResponse[2]));
+				parsedResponse[1], Integer.parseInt(parsedResponse[2]), RED,
+				YELLOW, true);
 	}
-	
+
+	public void updateUserInfo(String response, String plCol, String oppCol,
+			String isSoundOn) {
+		boolean b = false;
+		if (isSoundOn.compareTo("On") == 0)
+			b = true;
+
+		String playerCol = plCol.toLowerCase() + ".png";
+		String opponentCol = oppCol.toLowerCase() + ".png";
+
+		// TODO Auto-generated method stub
+		String[] parsedResponse = response.split("[:]");
+		editor.putInt(ID, Integer.parseInt(parsedResponse[0]));
+		editor.putString(USERNAME, parsedResponse[1]);
+		editor.putInt(SCORE, Integer.parseInt(parsedResponse[2]));
+		editor.putString(PLAYER_COLOR, playerCol);
+		editor.putString(OPPONENT_COLOR, opponentCol);
+		editor.putBoolean(IS_SOUND_ON, b);
+		editor.commit();
+
+		player.setPlayer(Integer.parseInt(parsedResponse[0]),
+				parsedResponse[1], Integer.parseInt(parsedResponse[2]),
+				playerCol, opponentCol, b);
+	}
+
 	public void updateCurrentOpponentInfo(String response) {
 		String[] parsedResponse = response.split("[:]");
-	
-		player.getCurrentOpponentPlayer().setPlayer(Integer.parseInt(parsedResponse[0]),
-													parsedResponse[1],
-													Integer.parseInt(parsedResponse[2]));
+
+		player.getCurrentOpponentPlayer().setPlayer(
+				Integer.parseInt(parsedResponse[0]), parsedResponse[1],
+				Integer.parseInt(parsedResponse[2]));
 
 	}
-	
+
 	public void updateUserScore(String response) {
 		// TODO Auto-generated method stub
 	}
-
 
 	public Player getPlayer() {
 		return player;
@@ -290,29 +333,27 @@ public class MainActivity extends Activity {
 	/*
 	 * ---------------UserIsAlreadyPlaying------------
 	 * 
-	 * Gives a Dialog saying that the user 'player2' is
-	 * not available any more. Playing another game.
-	 * 
+	 * Gives a Dialog saying that the user 'player2' is not available any more.
+	 * Playing another game.
 	 */
 	public void userIsAlreadyPlaying(Player player2) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	/*
 	 * Get the online players and update the table
 	 */
-	
+
 	public void calculateNewScore(final int score1, final int score2) {
-		
+
 	}
 
 	public void startGameWith(Player player2) {
 		Intent intent = new Intent(this, GameProcessActivity.class);
 		startActivity(intent);
 		GameManager.getInstance().gameProcessActivity.startGameWith(player2);
-		
+
 	}
 
 }

@@ -23,7 +23,9 @@ import android.os.Message;
 import android.util.Log;
 
 public class ServerConnection {
-	final static String DOMAIN = "http://hakobyant.site90.com/";
+	final static String DOMAIN = "http://hakobyant.comeze.com/";
+//	final static String DOMAIN = "http://hakobyant.site90.com/";
+
 
 	final static String SEND_MESSAGE = "send_message";
 	final static String GET_MESSAGE = "get_message";
@@ -183,11 +185,12 @@ public class ServerConnection {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						Log.i("Vasa","update User Info");
-
 						GameManager.getInstance().mainActivity
 								.updateUserInfo(response);
-						Log.i("Vasa","update User Info");
+						ServerConnection.updateNameAndScore(
+								GameManager.getInstance().mainActivity.getPlayer().getPlayerUsername(),
+								GameManager.getInstance().mainActivity.getPlayer().getPlayerScore());
+
 						
 					}
 				});

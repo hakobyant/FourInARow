@@ -70,8 +70,11 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		opponentColorRow = new TableRow(this);
 		TextView colorTag = new TextView(this);
 		TextView opponentColorTag = new TextView(this);
+		
 		prefColorSpinner = new Spinner(this);
 		opponentColorSpinner = new Spinner(this);
+		soundSpinner = new Spinner(this);
+
 		List<String> colorList = new ArrayList<String>();
 
 		colorList.add("Red");
@@ -96,9 +99,10 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		opponentColorRow.addView(opponentColorSpinner);
 		form.addView(colorRow);
 		form.addView(opponentColorRow);
-		Spinner soundSpinner = new Spinner(this);
 		TextView soundTag = new TextView(this);
+		
 		List<String> onOffList = new ArrayList<String>();
+		
 		onOffList.add("On");
 		onOffList.add("Off");
 
@@ -138,7 +142,12 @@ public class SettingsActivity extends Activity implements OnClickListener {
 			response += ":";
 			response += Integer.toString(player.getPlayerScore());
 			
-			GameManager.getInstance().mainActivity.updateUserInfo(response);
+			GameManager.getInstance().mainActivity.updateUserInfo(
+					response, 
+					prefColorSpinner.getSelectedItem().toString(),
+					opponentColorSpinner.getSelectedItem().toString(),
+					soundSpinner.getSelectedItem().toString()
+					);
 			Log.i("Vasa",response);
 			goToMainActivity();
 		} else {

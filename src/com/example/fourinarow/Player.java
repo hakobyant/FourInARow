@@ -14,7 +14,7 @@ public class Player {
 
 	public Player() {
 		playerID = -1;
-		playerUsername = "0";
+		playerUsername = "New Player";
 		playerScore = DEFAULT_SCORE;
 		playerColor = "Red";
 		opponentColor = "Yellow";
