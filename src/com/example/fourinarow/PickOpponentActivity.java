@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +30,8 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		
 		GameManager.getInstance().pickOpponentActivity = this;
 		
+		
 		ServerConnection.activePlayersConnection(GameManager.getInstance().mainActivity.getPlayer());
-		createPickOpponentLayout();
 	}
 	
 	private void createPickOpponentLayout() {
@@ -69,7 +70,6 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 		*/
 		PickOpponentLayout.addView(BackButtonLayout);
 		
-		this.setContentView(PickOpponentLayout);
 	
 	}
 	
@@ -88,7 +88,10 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 	
 	public void updatePlayerTable(final List<Player> retrievedResponse) {
 		// TODO Auto-generated method stub
-		for (int i = 0; i < retrievedResponse.size()-1; i++) {
+
+		createPickOpponentLayout();
+
+		for (int i = 0; i < retrievedResponse.size()-2; i++) {
 			opponent = retrievedResponse.get(i);
 			name = retrievedResponse.get(i).getPlayerUsername();
 			score = retrievedResponse.get(i).getPlayerScore();
@@ -109,12 +112,14 @@ public class PickOpponentActivity extends Activity implements OnClickListener{
 			newTextView.setText(i + ". " + retrievedResponse.get(i).getPlayerUsername() + "(" + score + ")");
 			newPlayerRow.addView(newTextView);
 			
-			
 			players.addView(newPlayerRow);
 			
 		}
-		players.removeView(PickOpponentLayout);
+
 		PickOpponentLayout.addView(players);
+		
+		this.setContentView(PickOpponentLayout);
+
 		//PickOpponentLayout.setMovementMethod(new ScrollingMovementMethod());
 	}
 

@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
 				}
 				else if (userIDString != null) {
 
-					Log.i("Test",ServerConnection.doMessageProcess(userIDString));
+//					Log.i("Test",ServerConnection.doMessageProcess(userIDString));
 				}
 				else if (sendMessageResponse != null) {
 					

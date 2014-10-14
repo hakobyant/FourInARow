@@ -23,6 +23,8 @@ import android.os.Message;
 import android.util.Log;
 
 public class ServerConnection {
+	final static String DOMAIN = "http://hakobyant.site90.com/";
+
 	final static String SEND_MESSAGE = "send_message";
 	final static String GET_MESSAGE = "get_message";
 	final static String SEND_USER = "send_user";
@@ -124,7 +126,7 @@ public class ServerConnection {
 					MyRequest myReq = requestQueue.get(0);
 					requestQueue.remove(0);
 
-					HttpPost post = new HttpPost("http://hakobyant.site90.com/"
+					HttpPost post = new HttpPost(DOMAIN
 							+ myReq.stringCommand + ".php");
 
 					try {
