@@ -1,5 +1,7 @@
 package com.example.fourinarow;
 
+import android.util.Log;
+
 public class Player {
 	public final int DEFAULT_SCORE = 1000;
 
@@ -16,17 +18,18 @@ public class Player {
 		playerID = -1;
 		playerUsername = "New Player";
 		playerScore = DEFAULT_SCORE;
-		playerColor = "Red";
-		opponentColor = "Yellow";
+		playerColor = "red.png";
+		opponentColor = "yellow.png";
 		isSoundOn = true;
 	}
+
 	public Player(final int id, final String username, final int score) {
 		playerID = id;
 		playerUsername = username;
 		playerScore = score;
-		playerColor = "Red";
-		opponentColor = "Yellow";
-		isSoundOn = true;		
+		playerColor = "red.png";
+		opponentColor = "yellow.png";
+		isSoundOn = true;
 	}
 
 	public int getPlayerID() {
@@ -81,11 +84,16 @@ public class Player {
 		isSoundOn = isOn;
 	}
 
+	// switch opponent colors
 	public void setCurrentOpponentPlayer(final Player p) {
 		currentOpponentPlayer = new Player();
 		currentOpponentPlayer.setPlayer(p.getPlayerID(), p.getPlayerUsername(),
-				p.getPlayerScore(), p.getPlayerColor(), p.getOpponentColor(),
-				p.getPlayerIsSoundOn());
+				p.getPlayerScore(), GameManager.getInstance().mainActivity
+						.getPlayer().getOpponentColor(), GameManager
+						.getInstance().mainActivity.getPlayer()
+						.getPlayerColor(),
+				GameManager.getInstance().mainActivity.getPlayer()
+						.getPlayerIsSoundOn());
 	}
 
 	public void setPlayer(final int id, final String usr, final int score) {
@@ -100,5 +108,14 @@ public class Player {
 		setPlayerColor(playerCol);
 		setOpponentColor(OpponentCol);
 		setIsSoundOn(isOn);
+	}
+
+	public void print() {
+		Log.i("Vasa", Integer.toString(playerID) + " " + playerUsername + " "
+				+ Integer.toString(playerScore) + " " + playerColor + " "
+				+ opponentColor + " "
+		// Integer.toString(currentOpponentPlayer.getPlayerID()) + " " +
+		// currentOpponentPlayer.getPlayerUsername()
+		);
 	}
 }

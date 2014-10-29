@@ -36,98 +36,128 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	TableRow firstPlayer, secondPlayer;
 	TextView firstName, secondName;
 	Button backButton;
-	Rect[] rects = new Rect[8]; // will keep the places of the clickable
-								// rectangles
+
+	boolean isTouchAllowed = false;
+	Rect[] rects; // will keep the places of the clickable
+					// rectangles
 	ImageView image;
 	Bitmap icon;
 	InputStream inputs = null;
-	boolean turn = true;
+	static boolean turn;
 	int[][] board = new int[7][6];
-	TextView turnIndicator;
-	String playerColor = GameManager.getInstance().mainActivity.getPlayer().getPlayerColor();
-	String opponentColor = GameManager.getInstance().mainActivity.getPlayer().getOpponentColor();
+	static TextView turnIndicator;
+	String playerColor = GameManager.getInstance().mainActivity.getPlayer()
+			.getPlayerColor();
+	String opponentColor = GameManager.getInstance().mainActivity.getPlayer()
+			.getOpponentColor();
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		GameManager.getInstance().gameProcessActivity = this;
 
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		screenWidth = dm.widthPixels;
-		screenHeight = dm.heightPixels;
-		cellSize = screenWidth / 9;
-		place = screenHeight / 3;
-		GameLayout = new RelativeLayout(this);
-		GameLayout.setBackgroundResource(R.drawable.background);// Sets the
-																// background of
-																// the UI
-
-		try {
-			RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(
-					cellSize, cellSize);
-			RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
-					cellSize, cellSize);
-
-			params1.setMargins(cellSize, cellSize, 0, 0);
-			inputs = this.getResources().getAssets().open(playerColor);
-			icon = BitmapFactory.decodeStream(inputs);
-			ImageView image1 = new ImageView(this);
-			image1.setImageBitmap(icon);
-			GameLayout.addView(image1, params1);
-
-			params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
-			inputs = this.getResources().getAssets().open(opponentColor);
-			icon = BitmapFactory.decodeStream(inputs);
-			ImageView image2 = new ImageView(this);
-			image2.setImageBitmap(icon);
-			GameLayout.addView(image2, params2);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Info = new TableLayout(this);
-
-		firstPlayer = new TableRow(this);
-		secondPlayer = new TableRow(this);
-		// buttonsRow = new TableRow(this);
-
-		firstName = new TextView(this);
-		firstName.setTextSize(22);
-		firstName.setText("You");
-		firstName.setPadding(3 * cellSize, cellSize, 0, 0);
-		firstPlayer.addView(firstName);
-
-		secondName = new TextView(this);
-		secondName.setTextSize(22);
-		secondName.setText(getIntent().getStringExtra("Name"));
-		secondName.setPadding(3 * cellSize, 3 * cellSize / 4, 0, 0);
-		secondPlayer.addView(secondName);
-
-		Info.addView(firstPlayer);
-		Info.addView(secondPlayer);
-
 		turnIndicator = new TextView(this);
-		RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		indicatorParams.setMargins(cellSize, 5 * cellSize, 0, 0);
-		turnIndicator.setText("Your turn");
-		turnIndicator.setTextSize(20);
-		GameLayout.addView(turnIndicator, indicatorParams);
 
-		backButton = new Button(this);
-		backButton.setText("Back To Main Menu");
-		backButton.setOnClickListener(this);
+		rects = new Rect[8];
 
-		// LinearLayout BackButtonLayout = new LinearLayout(this);
-		// BackButtonLayout.addView(backButton);
+		isTouchAllowed = true;
 
-		// GameLayout.addView(BackButtonLayout);
-		MyView grid = new MyView(this);
-		GameLayout.addView(Info);
-		GameLayout.addView(grid);
-		GameLayout.addView(backButton);
-		this.setContentView(GameLayout);
+		if (GameManager.getInstance().mainActivity.isFistTime) {
+			goToMainActivity();
+		} else {
+
+			DisplayMetrics dm = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(dm);
+			screenWidth = dm.widthPixels;
+			screenHeight = dm.heightPixels;
+			cellSize = screenWidth / 9;
+			place = screenHeight / 3;
+			GameLayout = new RelativeLayout(this);
+			GameLayout.setBackgroundResource(R.drawable.background);// Sets the
+																	// background
+																	// of
+																	// the UI
+
+			try {
+				RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(
+						cellSize, cellSize);
+				RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
+						cellSize, cellSize);
+
+				params1.setMargins(cellSize, cellSize, 0, 0);
+				inputs = this.getResources().getAssets().open(playerColor);
+				icon = BitmapFactory.decodeStream(inputs);
+				ImageView image1 = new ImageView(this);
+				image1.setImageBitmap(icon);
+				GameLayout.addView(image1, params1);
+
+				params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
+				inputs = this.getResources().getAssets().open(opponentColor);
+				icon = BitmapFactory.decodeStream(inputs);
+
+				ImageView image2 = new ImageView(this);
+				image2.setImageBitmap(icon);
+				GameLayout.addView(image2, params2);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Info = new TableLayout(this);
+
+			firstPlayer = new TableRow(this);
+			secondPlayer = new TableRow(this);
+			// buttonsRow = new TableRow(this);
+
+			firstName = new TextView(this);
+			firstName.setTextSize(22);
+			firstName.setText(GameManager.getInstance().mainActivity
+					.getPlayer().getPlayerUsername() + "(You)");
+			firstName.setPadding(3 * cellSize, cellSize, 0, 0);
+			firstPlayer.addView(firstName);
+
+			secondName = new TextView(this);
+			secondName.setTextSize(22);
+			if (GameManager.getInstance().mainActivity.getPlayer()
+					.getCurrentOpponentPlayer() != null)
+				secondName.setText(GameManager.getInstance().mainActivity
+						.getPlayer().getCurrentOpponentPlayer()
+						.getPlayerUsername());
+			secondName.setPadding(3 * cellSize, 3 * cellSize / 4, 0, 0);
+			secondPlayer.addView(secondName);
+
+			Info.addView(firstPlayer);
+			Info.addView(secondPlayer);
+
+			RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			indicatorParams.setMargins(cellSize, 5 * cellSize, 0, 0);
+			// turnIndicator.setText("Your turn");
+			turnIndicator.setTextSize(20);
+			GameLayout.addView(turnIndicator, indicatorParams);
+
+			/*
+			 * backButton = new Button(this);
+			 * backButton.setText("Back To Main Menu");
+			 * backButton.setOnClickListener(this);
+			 */
+			// LinearLayout BackButtonLayout = new LinearLayout(this);
+			// BackButtonLayout.addView(backButton);
+
+			// GameLayout.addView(BackButtonLayout);
+			MyView grid = new MyView(this);
+			GameLayout.addView(Info);
+			GameLayout.addView(grid);
+			// GameLayout.addView(backButton);
+			this.setContentView(GameLayout);
+		}
+
+	}
+
+	private void goToMainActivity() {
+		MainActivity.isFistTime = false;
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 
 	}
 
@@ -175,28 +205,27 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	public boolean onTouchEvent(MotionEvent event) {
 
+		if (!turn)
+			return true;
+		if (!isTouchAllowed)
+			return true;
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			int x = (int) event.getX();
 			int y = (int) event.getY();
 			for (int i = 0; i < 7; i++) {
-				if (rects[i].contains(x, y))
+				if (rects[i].contains(x, y)) {
 					dropDown(i);// Log.i("RECT #", (i+1) + " ");
+					ServerConnection.sendMove(
+							GameManager.getInstance().mainActivity.getPlayer(),
+							GameManager.getInstance().mainActivity.getPlayer()
+									.getCurrentOpponentPlayer(), Integer
+									.toString(i));
+				}
 
 			}
-			if (checkIfFinished()) {
-				Dialog dialog = new Dialog(this);
-				if (isGameDraw()) {
-					dialog.setTitle("Draw");
-					
-				} else {
-					dialog.setTitle(!turn ? "You Won" : "You Lost");
-				}
-				dialog.show();
-			}
-			;
 		}
 
-		return false;
+		return true;
 	}
 
 	private boolean isGameDraw() {
@@ -237,7 +266,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					return true;
 			}
 		}
-		if(isGameDraw()) return true;
+		if (isGameDraw())
+			return true;
 		return false;
 
 	}
@@ -292,7 +322,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 							cellSize, cellSize);
 					iconParams.setMargins(cellSize * (i + 1), place + (6 - j)
 							* cellSize, 0, 0);
-					
+
 					// iconParams.setMargins(0,0,0,0);
 					inputs = this.getResources().getAssets()
 							.open(turn ? playerColor : opponentColor);
@@ -307,12 +337,21 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					Log.i("Done", "easily");
 					break;
 				}
-
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
+		}
+		if (checkIfFinished()) {
+			Dialog dialog = new Dialog(this);
+			if (isGameDraw()) {
+				dialog.setTitle("Draw");
+
+			} else {
+				dialog.setTitle(!turn ? "You Won" : "You Lost");
+			}
+			dialog.show();
 		}
 	}
 
@@ -320,11 +359,29 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	 * -----------startGameWith--------------- Starts a game with the opponent
 	 * 'opponentID':'opponentUsername':'opponentScore'
 	 */
-	public void startGameWith(final Player currentOpponentPlayer) {
+	public void startGameWith(final Player player1, final Player player2) {
 		// TODO Auto-generated method stub
-		GameManager.getInstance().mainActivity.getPlayer()
-				.setCurrentOpponentPlayer(currentOpponentPlayer);
 
+		turn = (player1.getPlayerID() == GameManager.getInstance().mainActivity
+				.getPlayer().getPlayerID()) ? true : false;
+
+		if (turn) {
+			GameManager.getInstance().mainActivity.getPlayer()
+					.setCurrentOpponentPlayer(player2);
+			turnIndicator.setText("Your turn");
+		} else {
+			GameManager.getInstance().mainActivity.getPlayer()
+					.setCurrentOpponentPlayer(player1);
+
+			turnIndicator.setText("Opponent's turn");
+
+			ServerConnection.getMove(player1);
+		}
+
+		if (secondName != null) {
+			secondName
+					.setText(GameManager.getInstance().mainActivity.getPlayer()
+							.getCurrentOpponentPlayer().getPlayerUsername());
+		}
 	}
-
 }

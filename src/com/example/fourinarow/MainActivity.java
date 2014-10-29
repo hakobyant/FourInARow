@@ -1,5 +1,7 @@
 package com.example.fourinarow;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -11,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.InputFilter;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -47,16 +48,22 @@ public class MainActivity extends Activity {
 	final static String SEND_USER = "send_user";
 	public static final int DEFAULT_SCORE = 1000;
 
+	public static boolean isFistTime;
+
 	PickOpponentActivity pickOpponentActivity;
 
 	private static Player player;
 
+	static {
+		player = new Player();
+		isFistTime = true;
+	}
+
 	private static SharedPreferences preferences;
 	private static SharedPreferences.Editor editor;
 
-	private Handler handler;
+	// private Handler handler;
 
-	boolean firstTime;
 	private static DisplayMetrics dm;
 	String PlayerName = "New Player";
 	RelativeLayout MainLayout;
@@ -73,30 +80,36 @@ public class MainActivity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		GameManager.getInstance().mainActivity = this;
-		player = new Player();
 
-		setPrefs();
-
-		createHandler();
-
-		Greeting = new TextView(this);
-		dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-		if (preferences.getInt(ID, -1) == -1) {
-			createDialog();
-		} else {
-			player.setPlayer(preferences.getInt(ID, -1),
-					preferences.getString(USERNAME, "New Player"),
-					preferences.getInt(SCORE, DEFAULT_SCORE),
-					preferences.getString(PLAYER_COLOR, RED),
-					preferences.getString(OPPONENT_COLOR, YELLOW),
-					preferences.getBoolean(IS_SOUND_ON, true));
-
-			Greeting.setText("Hello " + player.getPlayerUsername());
+		if (isFistTime) {
+			goToPickOpponentActivity();
 		}
+		// player = new Player();
 
-		createLayout(dm.widthPixels, dm.heightPixels);
+		else {
+			setPrefs();
+
+			// createHandler();
+
+			Greeting = new TextView(this);
+			dm = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+			if (preferences.getInt(ID, -1) == -1) {
+				createDialog();
+			} else {
+				player.setPlayer(preferences.getInt(ID, -1),
+						preferences.getString(USERNAME, "New Player"),
+						preferences.getInt(SCORE, DEFAULT_SCORE),
+						preferences.getString(PLAYER_COLOR, RED),
+						preferences.getString(OPPONENT_COLOR, YELLOW),
+						preferences.getBoolean(IS_SOUND_ON, true));
+
+				Greeting.setText("Hello " + player.getPlayerUsername());
+			}
+
+			createLayout(dm.widthPixels, dm.heightPixels);
+		}
 	}
 
 	private void setPrefs() {
@@ -106,35 +119,27 @@ public class MainActivity extends Activity {
 
 	}
 
-	private void createHandler() {
-		handler = new Handler() {
-			// Create handleMessage function
-			public void handleMessage(Message msg) {
-				String getMessageResponse = msg.getData()
-						.getString(GET_MESSAGE);
-				String sendMessageResponse = msg.getData().getString(
-						SEND_MESSAGE);
-				String userIDString = msg.getData().getString(SEND_USER);
-
-				if (getMessageResponse == null && userIDString == null
-						&& sendMessageResponse == null) {
-					Toast.makeText(getBaseContext(),
-							"Not Got Response From Server.", Toast.LENGTH_SHORT)
-							.show();
-				} else if (getMessageResponse != null) {
-
-				} else if (userIDString != null) {
-
-					// Log.i("Test",ServerConnection.doMessageProcess(userIDString));
-				} else if (sendMessageResponse != null) {
-
-				}
-			}
-		};
-
-		ServerConnection.setHandler(handler);
-	}
-
+	/*
+	 * private void createHandler() { handler = new Handler() { // Create
+	 * handleMessage function public void handleMessage(Message msg) { String
+	 * getMessageResponse = msg.getData() .getString(GET_MESSAGE); String
+	 * sendMessageResponse = msg.getData().getString( SEND_MESSAGE); String
+	 * userIDString = msg.getData().getString(SEND_USER);
+	 * 
+	 * if (getMessageResponse == null && userIDString == null &&
+	 * sendMessageResponse == null) { Toast.makeText(getBaseContext(),
+	 * "Not Got Response From Server.", Toast.LENGTH_SHORT) .show(); } else if
+	 * (getMessageResponse != null) {
+	 * 
+	 * } else if (userIDString != null) {
+	 * 
+	 * // Log.i("Test",ServerConnection.doMessageProcess(userIDString)); } else
+	 * if (sendMessageResponse != null) {
+	 * 
+	 * } } };
+	 * 
+	 * ServerConnection.setHandler(handler); }
+	 */
 	private void createLayout(int screenWidth, int screenHeight) {
 
 		int buttonWidth = screenWidth / 2;
@@ -171,12 +176,13 @@ public class MainActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						if(player.getPlayerID() < 0)
-							ServerConnection.createNewUser(player.getPlayerUsername());
+						if (player.getPlayerID() < 0)
+							ServerConnection.createNewUser(player
+									.getPlayerUsername());
 						else
 							ServerConnection.updateNameAndScore(
-								player.getPlayerUsername(),
-								player.getPlayerScore());
+									player.getPlayerUsername(),
+									player.getPlayerScore());
 
 					}
 				});
@@ -260,11 +266,6 @@ public class MainActivity extends Activity {
 		dialog.setContentView(dialogLayout);
 
 		dialog.show();
-		firstTime = false;
-	}
-
-	public void updateScreen(String response) {
-		// TODO Auto-generated method stub
 	}
 
 	public void goToPickOpponentActivity() {
@@ -295,8 +296,8 @@ public class MainActivity extends Activity {
 		if (isSoundOn.compareTo("On") == 0)
 			b = true;
 
-		String playerCol = plCol.toLowerCase() + ".png";
-		String opponentCol = oppCol.toLowerCase() + ".png";
+		String playerCol = plCol.toLowerCase(Locale.ENGLISH) + ".png";
+		String opponentCol = oppCol.toLowerCase(Locale.ENGLISH) + ".png";
 
 		// TODO Auto-generated method stub
 		String[] parsedResponse = response.split("[:]");
@@ -346,13 +347,6 @@ public class MainActivity extends Activity {
 	 */
 
 	public void calculateNewScore(final int score1, final int score2) {
-
-	}
-
-	public void startGameWith(Player player2) {
-		Intent intent = new Intent(this, GameProcessActivity.class);
-		startActivity(intent);
-		GameManager.getInstance().gameProcessActivity.startGameWith(player2);
 
 	}
 
