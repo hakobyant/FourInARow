@@ -23,6 +23,9 @@ import android.widget.TextView;
 public class PickOpponentActivity extends Activity implements OnClickListener {
 
 	final public int NUMBER_OF_ONLINE_PLAYERS = 20;
+	final public int CHANGE_TO_OFFLINE = 0;
+	final public int CHANGE_TO_ONLINE = 1;
+
 	RelativeLayout PickOpponentLayout;
 	TableLayout players;
 	ArrayList<TableRow> playerRows;
@@ -179,5 +182,12 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 				player2);
 		
 
+	}
+	
+	
+    @Override
+	public void onBackPressed() {
+    	ServerConnection.updateIsOnline(CHANGE_TO_OFFLINE);
+    	super.onBackPressed();		
 	}
 }

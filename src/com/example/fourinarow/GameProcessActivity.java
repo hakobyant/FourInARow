@@ -348,6 +348,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		if (checkIfFinished()) {
 			Dialog dialog = new Dialog(this);
 			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(false);
 			if (isGameDraw()) {
 				dialog.setTitle("Draw");
 

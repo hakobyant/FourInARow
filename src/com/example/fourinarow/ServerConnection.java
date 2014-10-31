@@ -465,10 +465,8 @@ public class ServerConnection {
 								// TODO Auto-generated method stub
 								GameManager.getInstance().mainActivity
 										.goToPickOpponentActivity();
-
 							}
 						});
-
 			}
 
 			@Override
@@ -476,6 +474,42 @@ public class ServerConnection {
 				// TODO Auto-generated method stub
 				Log.i("Vasa", "Tigran");
 
+			}
+		});
+
+		requestQueue.add(myRequest);
+	}
+	
+	
+	
+	/*
+	 * If changeToIsOnline = 1, then the player will become online
+	 * If changeToIsOnline = 0, then the player will become offline
+	 */
+	public static void updateIsOnline(final int changeToIsOnline) {
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("request_type", "updateIsOnline"));
+
+		pairs.add(new BasicNameValuePair("user_id", Integer
+				.toString(GameManager.getInstance().mainActivity.getPlayer()
+						.getPlayerID())));
+		
+		pairs.add(new BasicNameValuePair("isOnline", Integer.toString(changeToIsOnline)));
+
+		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
+		myRequest.setRequestObserver(new RequestObserver() {
+
+			@Override
+			public void onSuccess(String response) {
+				// TODO Auto-generated method stub
+				Log.i("Test", "Done!");
+			}
+
+			@Override
+			public void onFailure(IOException e) {
+				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
+				updateIsOnline(changeToIsOnline);
 			}
 		});
 
