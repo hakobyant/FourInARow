@@ -77,11 +77,11 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		List<String> colorList = new ArrayList<String>();
 
-		colorList.add("Red");
-		colorList.add("Yellow");
-		colorList.add("Blue");
-		colorList.add("Green");
-		colorList.add("Black");
+		colorList.add("red");
+		colorList.add("yellow");
+		colorList.add("blue");
+		colorList.add("green");
+		colorList.add("black");
 
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
 				this, android.R.layout.simple_spinner_item, colorList);
@@ -89,8 +89,13 @@ public class SettingsActivity extends Activity implements OnClickListener {
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		prefColorSpinner.setAdapter(spinnerArrayAdapter);
 		opponentColorSpinner.setAdapter(spinnerArrayAdapter);
-		int spinnerPosition = spinnerArrayAdapter.getPosition("Yellow");
-		opponentColorSpinner.setSelection(spinnerPosition);
+		//int spinnerPosition = spinnerArrayAdapter.getPosition("Yellow");
+		int opponentSpinnerPosition = spinnerArrayAdapter.getPosition(GameManager.getInstance().mainActivity.getPlayer().getOpponentColor());
+		int playerSpinnerPosition = spinnerArrayAdapter.getPosition(GameManager.getInstance().mainActivity.getPlayer().getPlayerColor());
+		
+		opponentColorSpinner.setSelection(opponentSpinnerPosition);
+		prefColorSpinner.setSelection(playerSpinnerPosition);
+		
 		colorTag.setText("Your Color");
 		opponentColorTag.setText("Opponent's Color");
 		colorRow.addView(colorTag);
@@ -113,6 +118,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		SoundAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		soundSpinner.setAdapter(SoundAdapter);
+		soundSpinner.setSelection(GameManager.getInstance().mainActivity.getPlayer().getPlayerIsSoundOn()?0:1);
 		soundRow.addView(soundTag);
 		soundRow.addView(soundSpinner);
 		form.addView(soundRow);
