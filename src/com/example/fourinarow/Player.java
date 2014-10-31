@@ -18,8 +18,8 @@ public class Player {
 		playerID = -1;
 		playerUsername = "New Player";
 		playerScore = DEFAULT_SCORE;
-		playerColor = "red";
-		opponentColor = "yellow";
+		playerColor = "red.png";
+		opponentColor = "yellow.png";
 		isSoundOn = true;
 	}
 
@@ -27,8 +27,8 @@ public class Player {
 		playerID = id;
 		playerUsername = username;
 		playerScore = score;
-		playerColor = "red";
-		opponentColor = "yellow";
+		playerColor = "red.png";
+		opponentColor = "yellow.png";
 		isSoundOn = true;
 	}
 

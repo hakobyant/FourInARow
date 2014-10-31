@@ -296,8 +296,8 @@ public class MainActivity extends Activity {
 		if (isSoundOn.compareTo("On") == 0)
 			b = true;
 
-		String playerCol = plCol.toLowerCase(Locale.ENGLISH);
-		String opponentCol = oppCol.toLowerCase(Locale.ENGLISH);
+		String playerCol = plCol.toLowerCase(Locale.ENGLISH) + ".png";
+		String opponentCol = oppCol.toLowerCase(Locale.ENGLISH) + ".png";
 
 		// TODO Auto-generated method stub
 		String[] parsedResponse = response.split("[:]");

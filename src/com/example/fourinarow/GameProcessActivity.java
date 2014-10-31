@@ -15,7 +15,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -50,7 +49,6 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	static TextView turnIndicator;
 	String playerColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getPlayerColor();
-	
 	String opponentColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getOpponentColor();
 
@@ -88,15 +86,14 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 						cellSize, cellSize);
 
 				params1.setMargins(cellSize, cellSize, 0, 0);
-				inputs = this.getResources().getAssets().open(playerColor + ".png");
-				Log.i("*****", "****************");
+				inputs = this.getResources().getAssets().open(playerColor);
 				icon = BitmapFactory.decodeStream(inputs);
 				ImageView image1 = new ImageView(this);
 				image1.setImageBitmap(icon);
 				GameLayout.addView(image1, params1);
 
 				params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
-				inputs = this.getResources().getAssets().open(opponentColor + ".png");
+				inputs = this.getResources().getAssets().open(opponentColor);
 				icon = BitmapFactory.decodeStream(inputs);
 
 				ImageView image2 = new ImageView(this);
@@ -105,7 +102,6 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 			} catch (IOException e) {
 				e.printStackTrace();
-				Log.i("###################", playerColor);
 			}
 			Info = new TableLayout(this);
 
@@ -140,6 +136,14 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			turnIndicator.setTextSize(20);
 			GameLayout.addView(turnIndicator, indicatorParams);
 
+			/*
+			 * backButton = new Button(this);
+			 * backButton.setText("Back To Main Menu");
+			 * backButton.setOnClickListener(this);
+			 */
+			// LinearLayout BackButtonLayout = new LinearLayout(this);
+			// BackButtonLayout.addView(backButton);
+
 			// GameLayout.addView(BackButtonLayout);
 			MyView grid = new MyView(this);
 			GameLayout.addView(Info);
@@ -172,7 +176,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		@Override
 		public void onDraw(Canvas canvas) {
 			// TODO Auto-generated method stub
-				
+
 			super.onDraw(canvas);
 
 			BorderLinePaint.setStrokeWidth(3);
@@ -323,7 +327,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 					// iconParams.setMargins(0,0,0,0);
 					inputs = this.getResources().getAssets()
-							.open(turn ? playerColor + ".png": opponentColor + ".png");
+							.open(turn ? playerColor : opponentColor);
 					icon = BitmapFactory.decodeStream(inputs);
 					image = new ImageView(this);
 					image.setImageBitmap(icon);
@@ -332,8 +336,6 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					turnIndicator.setText(turn ? "Your turn"
 							: "Opponent's turn");
 					board[i][j] = turn ? 1 : -1;
-					MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.tap);
-					mp.start();
 					Log.i("Done", "easily");
 					break;
 				}
@@ -347,13 +349,9 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			Dialog dialog = new Dialog(this);
 			dialog.setCanceledOnTouchOutside(false);
 			if (isGameDraw()) {
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
-				mp.start();
 				dialog.setTitle("Draw");
 
 			} else {
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), !turn ? R.raw.victory : R.raw.losing);
-				mp.start();
 				dialog.setTitle(!turn ? "You Won" : "You Lost");
 			}
 			dialog.show();
