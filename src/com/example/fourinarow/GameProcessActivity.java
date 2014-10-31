@@ -36,6 +36,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	TableRow firstPlayer, secondPlayer;
 	TextView firstName, secondName;
 	Button backButton;
+	static String turnIndicatorText;
 
 	boolean isTouchAllowed = false;
 	Rect[] rects; // will keep the places of the clickable
@@ -61,7 +62,6 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 		rects = new Rect[8];
 
-		isTouchAllowed = true;
 
 		if (GameManager.getInstance().mainActivity.isFistTime) {
 			goToMainActivity();
@@ -132,7 +132,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(
 					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			indicatorParams.setMargins(cellSize, 5 * cellSize, 0, 0);
-			// turnIndicator.setText("Your turn");
+			turnIndicator.setText(turnIndicatorText);
 			turnIndicator.setTextSize(20);
 			GameLayout.addView(turnIndicator, indicatorParams);
 
@@ -150,6 +150,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			GameLayout.addView(grid);
 			// GameLayout.addView(backButton);
 			this.setContentView(GameLayout);
+			isTouchAllowed = true;
+
 		}
 
 	}
@@ -345,6 +347,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		}
 		if (checkIfFinished()) {
 			Dialog dialog = new Dialog(this);
+			dialog.setCanceledOnTouchOutside(false);
 			if (isGameDraw()) {
 				dialog.setTitle("Draw");
 
@@ -368,13 +371,13 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		if (turn) {
 			GameManager.getInstance().mainActivity.getPlayer()
 					.setCurrentOpponentPlayer(player2);
-			turnIndicator.setText("Your turn");
+			turnIndicatorText = "Your turn";
 		} else {
 			GameManager.getInstance().mainActivity.getPlayer()
 					.setCurrentOpponentPlayer(player1);
 
-			turnIndicator.setText("Opponent's turn");
-
+			turnIndicatorText = "Opponent's turn";
+			
 			ServerConnection.getMove(player1);
 		}
 

@@ -154,7 +154,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 //				}
 //			});
 
-			newTextView[i].setText(i + ". "
+			newTextView[i].setText(Integer.toString(i + 1) + ". "
 					+ retrievedResponse.get(i).getPlayerUsername() + "("
 					+ score + ")");
 			newPlayerRow.addView(newTextView[i]);
