@@ -12,12 +12,14 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,21 +51,23 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	static TextView turnIndicator;
 	String playerColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getPlayerColor();
-
+	
 	String opponentColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getOpponentColor();
-	boolean soundIsOn = GameManager.getInstance().mainActivity.getPlayer().getPlayerIsSoundOn();
+	
+	public boolean isSoundOn = GameManager.getInstance().mainActivity.getPlayer().getPlayerIsSoundOn();
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-				
+
 		GameManager.getInstance().gameProcessActivity = this;
 
 		turnIndicator = new TextView(this);
 
 		rects = new Rect[8];
-		
+
+
 		if (GameManager.getInstance().mainActivity.isFistTime) {
 			goToMainActivity();
 		} else {
@@ -87,16 +91,15 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 						cellSize, cellSize);
 
 				params1.setMargins(cellSize, cellSize, 0, 0);
-				inputs = this.getResources().getAssets()
-						.open(playerColor + ".png");
+				inputs = this.getResources().getAssets().open(playerColor + ".png");
+				Log.i("*****", "****************");
 				icon = BitmapFactory.decodeStream(inputs);
 				ImageView image1 = new ImageView(this);
 				image1.setImageBitmap(icon);
 				GameLayout.addView(image1, params1);
 
 				params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
-				inputs = this.getResources().getAssets()
-						.open(opponentColor + ".png");
+				inputs = this.getResources().getAssets().open(opponentColor + ".png");
 				icon = BitmapFactory.decodeStream(inputs);
 
 				ImageView image2 = new ImageView(this);
@@ -105,6 +108,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				Log.i("###################", playerColor);
 			}
 			Info = new TableLayout(this);
 
@@ -131,7 +135,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 			Info.addView(firstPlayer);
 			Info.addView(secondPlayer);
-
+			
 			RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(
 					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			indicatorParams.setMargins(cellSize, 5 * cellSize, 0, 0);
@@ -139,9 +143,27 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			turnIndicator.setTextSize(20);
 			GameLayout.addView(turnIndicator, indicatorParams);
 
+			// GameLayout.addView(BackButtonLayout);
 			MyView grid = new MyView(this);
 			GameLayout.addView(Info);
 			GameLayout.addView(grid);
+			
+			backButton = new Button(this);
+			backButton.setText("Resign and Go to Main Menu");
+			RelativeLayout.LayoutParams bt = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			
+			backButton.setPadding(0, cellSize*13, 0, cellSize*12);
+			backButton.setGravity(Gravity.CENTER_HORIZONTAL);
+			backButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(GameProcessActivity.this, MainActivity.class);
+					startActivity(intent);
+				}
+			});
+			GameLayout.addView(backButton,bt);
 			this.setContentView(GameLayout);
 			isTouchAllowed = true;
 
@@ -167,13 +189,15 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		@Override
 		public void onDraw(Canvas canvas) {
 			// TODO Auto-generated method stub
-
+				
 			super.onDraw(canvas);
 
 			BorderLinePaint.setStrokeWidth(3);
 			for (int i = 0; i < 8; i++) {
 				rects[i] = new Rect(cellSize * (i + 1), place + 3 * cellSize,
 						cellSize * (i + 2), place + cellSize * 9);
+				// rects[i].set(cellSize*(i+1), place, cellSize*(i+2), place +
+				// cellSize*6);
 				canvas.drawLine(cellSize * (i + 1), place + cellSize, cellSize
 						* (i + 1), place + cellSize * 7, BorderLinePaint);
 
@@ -297,6 +321,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	public void dropDown(int i) {
 		try {
+			// image.setScaleX(8/10);
+			// while(board[i][j] != 0 ){j++;}
 			for (int j = 0; j < 6; j++) {
 				if (board[i][j] == 0) {
 
@@ -306,11 +332,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 							* cellSize, 0, 0);
 
 					// iconParams.setMargins(0,0,0,0);
-					inputs = this
-							.getResources()
-							.getAssets()
-							.open(turn ? playerColor + ".png" : opponentColor
-									+ ".png");
+					inputs = this.getResources().getAssets()
+							.open(turn ? playerColor + ".png": opponentColor + ".png");
 					icon = BitmapFactory.decodeStream(inputs);
 					image = new ImageView(this);
 					image.setImageBitmap(icon);
@@ -319,9 +342,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					turnIndicator.setText(turn ? "Your turn"
 							: "Opponent's turn");
 					board[i][j] = turn ? 1 : -1;
-					MediaPlayer mp = MediaPlayer.create(
-							getApplicationContext(), R.raw.tap);
-					if(soundIsOn)
+					MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.tap);
+					if(isSoundOn)
 						mp.start();
 					Log.i("Done", "easily");
 					break;
@@ -337,16 +359,15 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			dialog.setCanceledOnTouchOutside(false);
 			dialog.setCancelable(false);
 			if (isGameDraw()) {
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(),
-						R.raw.draw);
-				if(soundIsOn)
+				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
+				if(isSoundOn)
 					mp.start();
+				
 				dialog.setTitle("Draw");
 
 			} else {
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(),
-						!turn ? R.raw.victory : R.raw.losing);
-				if(soundIsOn)
+				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), !turn ? R.raw.victory : R.raw.losing);
+				if(isSoundOn)
 					mp.start();
 				dialog.setTitle(!turn ? "You Won" : "You Lost");
 			}
@@ -373,7 +394,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					.setCurrentOpponentPlayer(player1);
 
 			turnIndicatorText = "Opponent's turn";
-
+			
 			ServerConnection.getMove(player1);
 		}
 
