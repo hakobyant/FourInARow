@@ -11,6 +11,8 @@ public class Player {
 	private String playerColor;
 	private String opponentColor;
 	private boolean isSoundOn;
+	private boolean isPlayerOnline;
+
 
 	private Player currentOpponentPlayer;
 
@@ -21,6 +23,7 @@ public class Player {
 		playerColor = "red";
 		opponentColor = "yellow";
 		isSoundOn = true;
+		isPlayerOnline = false;
 	}
 
 	public Player(final int id, final String username, final int score) {
@@ -30,6 +33,7 @@ public class Player {
 		playerColor = "red";
 		opponentColor = "yellow";
 		isSoundOn = true;
+		isPlayerOnline = false;
 	}
 
 	public int getPlayerID() {
@@ -60,6 +64,10 @@ public class Player {
 		return currentOpponentPlayer;
 	}
 
+	public boolean getIsPlayerOnline() {
+		return isPlayerOnline;
+	}
+	
 	public void setPlayerID(final int id) {
 		playerID = id;
 	}
@@ -82,6 +90,10 @@ public class Player {
 
 	public void setIsSoundOn(final boolean isOn) {
 		isSoundOn = isOn;
+	}
+	
+	public void setIsPlayerOnline(final boolean isOnline) {
+		isPlayerOnline = isOnline;
 	}
 
 	// switch opponent colors

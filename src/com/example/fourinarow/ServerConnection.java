@@ -200,9 +200,7 @@ public class ServerConnection {
 
 			@Override
 			public void onFailure(IOException e) {
-				Log.e("Vasa", "Failed");
-				Log.e("Vasa", e.getMessage());
-				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
 
 			}
 		});
@@ -262,7 +260,9 @@ public class ServerConnection {
 									 * Auto-generated catch block
 									 * e.printStackTrace(); }
 									 */
-									activePlayersConnection(player1);
+									if (GameManager.getInstance().mainActivity
+											.getPlayer().getIsPlayerOnline())
+										activePlayersConnection(player1);
 
 								}
 							});
@@ -285,6 +285,7 @@ public class ServerConnection {
 			@Override
 			public void onFailure(IOException e) {
 				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
 
 			}
 		});
@@ -371,6 +372,7 @@ public class ServerConnection {
 			@Override
 			public void onFailure(IOException e) {
 				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
 
 			}
 		});
@@ -422,6 +424,7 @@ public class ServerConnection {
 			@Override
 			public void onFailure(IOException e) {
 				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
 
 			}
 		});
@@ -472,29 +475,28 @@ public class ServerConnection {
 			@Override
 			public void onFailure(IOException e) {
 				// TODO Auto-generated method stub
-				Log.i("Vasa", "Tigran");
+				Log.i("Vasa", "No internet connection");
 
 			}
 		});
 
 		requestQueue.add(myRequest);
 	}
-	
-	
-	
+
 	/*
-	 * If changeToIsOnline = 1, then the player will become online
-	 * If changeToIsOnline = 0, then the player will become offline
+	 * If changeToIsOnline = 1, then the player will become online If
+	 * changeToIsOnline = 0, then the player will become offline
 	 */
 	public static void updateIsOnline(final int changeToIsOnline) {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("request_type", "updateIsOnline"));
 
+		pairs.add(new BasicNameValuePair("isOnline", Integer
+				.toString(changeToIsOnline)));
+
 		pairs.add(new BasicNameValuePair("user_id", Integer
 				.toString(GameManager.getInstance().mainActivity.getPlayer()
 						.getPlayerID())));
-		
-		pairs.add(new BasicNameValuePair("isOnline", Integer.toString(changeToIsOnline)));
 
 		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
 		myRequest.setRequestObserver(new RequestObserver() {
@@ -514,6 +516,42 @@ public class ServerConnection {
 		});
 
 		requestQueue.add(myRequest);
+	}
+
+	/*
+	 * 
+	 * Before bringing up the Active Players on PickOpponentActivity, it removes
+	 * all previously proposed games and sent messages to the player.
+	 */
+	public static void removePreviousMessages(Player player) {
+
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("request_type",
+				"removePreviousMessages"));
+
+		pairs.add(new BasicNameValuePair("user_id", Integer
+				.toString(GameManager.getInstance().mainActivity.getPlayer()
+						.getPlayerID())));
+
+		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
+		myRequest.setRequestObserver(new RequestObserver() {
+
+			@Override
+			public void onSuccess(String response) {
+				// TODO Auto-generated method stub
+				ServerConnection.activePlayersConnection(GameManager
+						.getInstance().mainActivity.getPlayer());
+			}
+
+			@Override
+			public void onFailure(IOException e) {
+				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
+			}
+		});
+
+		requestQueue.add(myRequest);
+
 	}
 
 }

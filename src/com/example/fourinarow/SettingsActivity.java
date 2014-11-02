@@ -93,6 +93,11 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		int opponentSpinnerPosition = spinnerArrayAdapter.getPosition(GameManager.getInstance().mainActivity.getPlayer().getOpponentColor());
 		int playerSpinnerPosition = spinnerArrayAdapter.getPosition(GameManager.getInstance().mainActivity.getPlayer().getPlayerColor());
 		
+		
+		Log.i("Test",Integer.toString(opponentSpinnerPosition));
+		Log.i("Test",Integer.toString(playerSpinnerPosition));
+		
+		
 		opponentColorSpinner.setSelection(opponentSpinnerPosition);
 		prefColorSpinner.setSelection(playerSpinnerPosition);
 		
