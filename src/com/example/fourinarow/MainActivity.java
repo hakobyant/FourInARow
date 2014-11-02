@@ -2,6 +2,7 @@ package com.example.fourinarow;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.InputFilter;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -296,22 +298,19 @@ public class MainActivity extends Activity {
 		if (isSoundOn.compareTo("On") == 0)
 			b = true;
 
-		String playerCol = plCol.toLowerCase(Locale.ENGLISH);
-		String opponentCol = oppCol.toLowerCase(Locale.ENGLISH);
-
 		// TODO Auto-generated method stub
 		String[] parsedResponse = response.split("[:]");
 		editor.putInt(ID, Integer.parseInt(parsedResponse[0]));
 		editor.putString(USERNAME, parsedResponse[1]);
 		editor.putInt(SCORE, Integer.parseInt(parsedResponse[2]));
-		editor.putString(PLAYER_COLOR, playerCol);
-		editor.putString(OPPONENT_COLOR, opponentCol);
+		editor.putString(PLAYER_COLOR, plCol);
+		editor.putString(OPPONENT_COLOR, oppCol);
 		editor.putBoolean(IS_SOUND_ON, b);
 		editor.commit();
 
 		player.setPlayer(Integer.parseInt(parsedResponse[0]),
 				parsedResponse[1], Integer.parseInt(parsedResponse[2]),
-				playerCol, opponentCol, b);
+				plCol, oppCol, b);
 	}
 
 	public void updateCurrentOpponentInfo(String response) {
@@ -347,6 +346,11 @@ public class MainActivity extends Activity {
 	 */
 
 	public void calculateNewScore(final int score1, final int score2) {
+
+	}
+	
+	@Override
+	public void onBackPressed() {
 
 	}
 

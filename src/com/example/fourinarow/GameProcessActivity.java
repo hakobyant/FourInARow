@@ -52,18 +52,19 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	String opponentColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getOpponentColor();
-	boolean soundIsOn = GameManager.getInstance().mainActivity.getPlayer().getPlayerIsSoundOn();
+	boolean soundIsOn = GameManager.getInstance().mainActivity.getPlayer()
+			.getPlayerIsSoundOn();
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-				
+
 		GameManager.getInstance().gameProcessActivity = this;
 
 		turnIndicator = new TextView(this);
 
 		rects = new Rect[8];
-		
+
 		if (GameManager.getInstance().mainActivity.isFistTime) {
 			goToMainActivity();
 		} else {
@@ -321,7 +322,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					board[i][j] = turn ? 1 : -1;
 					MediaPlayer mp = MediaPlayer.create(
 							getApplicationContext(), R.raw.tap);
-					if(soundIsOn)
+					if (soundIsOn)
 						mp.start();
 					Log.i("Done", "easily");
 					break;
@@ -339,14 +340,14 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			if (isGameDraw()) {
 				MediaPlayer mp = MediaPlayer.create(getApplicationContext(),
 						R.raw.draw);
-				if(soundIsOn)
+				if (soundIsOn)
 					mp.start();
 				dialog.setTitle("Draw");
 
 			} else {
 				MediaPlayer mp = MediaPlayer.create(getApplicationContext(),
 						!turn ? R.raw.victory : R.raw.losing);
-				if(soundIsOn)
+				if (soundIsOn)
 					mp.start();
 				dialog.setTitle(!turn ? "You Won" : "You Lost");
 			}
@@ -382,5 +383,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					.setText(GameManager.getInstance().mainActivity.getPlayer()
 							.getCurrentOpponentPlayer().getPlayerUsername());
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+
 	}
 }

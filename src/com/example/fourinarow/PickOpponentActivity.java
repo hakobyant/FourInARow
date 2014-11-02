@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 public class PickOpponentActivity extends Activity implements OnClickListener {
 
-	final public int NUMBER_OF_ONLINE_PLAYERS = 20;
-	final public int CHANGE_TO_OFFLINE = 0;
-	final public int CHANGE_TO_ONLINE = 1;
+	final static public int NUMBER_OF_ONLINE_PLAYERS = 20;
+	final static public int CHANGE_TO_OFFLINE = 0;
+	final static public int CHANGE_TO_ONLINE = 1;
 
 	RelativeLayout PickOpponentLayout;
 	TableLayout players;
@@ -34,13 +34,15 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		GameManager.getInstance().pickOpponentActivity = this;
+		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
+				true);
 
 		if (GameManager.getInstance().mainActivity.isFistTime) {
 			goToGameProcessActivity();
 		} else {
 
 			ServerConnection
-					.activePlayersConnection(GameManager.getInstance().mainActivity
+					.removePreviousMessages(GameManager.getInstance().mainActivity
 							.getPlayer());
 		}
 	}
@@ -140,19 +142,19 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 				}
 			});
 
-//			newTextView[i].setOnClickListener(new OnClickListener() {
-//				public void onClick(View v) { // TODO Auto-generated
-//					Intent PickOpponentIntent = new Intent(
-//							PickOpponentActivity.this,
-//							GameProcessActivity.class);
-//					startActivity(PickOpponentIntent);
-//					PickOpponentIntent.putExtra("Name", name);
-//					PickOpponentIntent.putExtra("Score", score);
-//					ServerConnection.requestGameWith(
-//							GameManager.getInstance().mainActivity.getPlayer(),
-//							retrievedResponse.get(j));
-//				}
-//			});
+			// newTextView[i].setOnClickListener(new OnClickListener() {
+			// public void onClick(View v) { // TODO Auto-generated
+			// Intent PickOpponentIntent = new Intent(
+			// PickOpponentActivity.this,
+			// GameProcessActivity.class);
+			// startActivity(PickOpponentIntent);
+			// PickOpponentIntent.putExtra("Name", name);
+			// PickOpponentIntent.putExtra("Score", score);
+			// ServerConnection.requestGameWith(
+			// GameManager.getInstance().mainActivity.getPlayer(),
+			// retrievedResponse.get(j));
+			// }
+			// });
 
 			newTextView[i].setText(Integer.toString(i + 1) + ". "
 					+ retrievedResponse.get(i).getPlayerUsername() + "("
@@ -174,17 +176,34 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(this, GameProcessActivity.class);
 		startActivity(intent);
 
-
 		GameManager.getInstance().gameProcessActivity.startGameWith(player1,
 				player2);
-		
 
 	}
-	
-	
-    @Override
+
+	@Override
 	public void onBackPressed() {
-    	ServerConnection.updateIsOnline(CHANGE_TO_OFFLINE);
-    	super.onBackPressed();		
+		ServerConnection.updateIsOnline(CHANGE_TO_OFFLINE);
+		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
+				false);
+		super.onBackPressed();
 	}
+
+	@Override
+	public void onPause() {
+		ServerConnection.updateIsOnline(CHANGE_TO_OFFLINE);
+		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
+				false);
+		Log.i("Test","Paused");
+		super.onPause();
+	}
+	
+	@Override
+	public void onResume() {
+		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
+				true);
+		ServerConnection.updateIsOnline(CHANGE_TO_ONLINE);
+		super.onResume();
+	}
+
 }
