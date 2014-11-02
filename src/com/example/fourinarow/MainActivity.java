@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 	EditText enterName;
 	Button startGameButton, highScoresButton, settingsButton, helpButton;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -5,10 +5,12 @@ import java.io.InputStream;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,9 +20,11 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,7 +35,7 @@ import android.widget.TextView;
 public class GameProcessActivity extends Activity implements OnClickListener {
 
 	int screenWidth, screenHeight, cellSize, place;
-	RelativeLayout GameLayout;
+	RelativeLayout GameLayout, backButtonLayout;
 	TableLayout Info;
 	TableRow firstPlayer, secondPlayer;
 	TextView firstName, secondName;
@@ -52,113 +56,129 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	String opponentColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getOpponentColor();
-	boolean soundIsOn = GameManager.getInstance().mainActivity.getPlayer()
-			.getPlayerIsSoundOn();
-
+	boolean soundIsOn = GameManager.getInstance().mainActivity.getPlayer().getPlayerIsSoundOn();
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+		
+				
 		GameManager.getInstance().gameProcessActivity = this;
 
 		turnIndicator = new TextView(this);
 
 		rects = new Rect[8];
-
+		
 		if (GameManager.getInstance().mainActivity.isFistTime) {
 			goToMainActivity();
 		} else {
-
-			DisplayMetrics dm = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(dm);
-			screenWidth = dm.widthPixels;
-			screenHeight = dm.heightPixels;
-			cellSize = screenWidth / 9;
-			place = screenHeight / 3;
-			GameLayout = new RelativeLayout(this);
-			GameLayout.setBackgroundResource(R.drawable.background);// Sets the
-																	// background
-																	// of
-																	// the UI
-
-			try {
-				RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(
-						cellSize, cellSize);
-				RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
-						cellSize, cellSize);
-
-				params1.setMargins(cellSize, cellSize, 0, 0);
-				inputs = this.getResources().getAssets()
-						.open(playerColor + ".png");
-				icon = BitmapFactory.decodeStream(inputs);
-				ImageView image1 = new ImageView(this);
-				image1.setImageBitmap(icon);
-				GameLayout.addView(image1, params1);
-
-				params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
-				inputs = this.getResources().getAssets()
-						.open(opponentColor + ".png");
-				icon = BitmapFactory.decodeStream(inputs);
-
-				ImageView image2 = new ImageView(this);
-				image2.setImageBitmap(icon);
-				GameLayout.addView(image2, params2);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Info = new TableLayout(this);
-
-			firstPlayer = new TableRow(this);
-			secondPlayer = new TableRow(this);
-			// buttonsRow = new TableRow(this);
-
-			firstName = new TextView(this);
-			firstName.setTextSize(22);
-			firstName.setText(GameManager.getInstance().mainActivity
-					.getPlayer().getPlayerUsername() + "(You)");
-			firstName.setPadding(3 * cellSize, cellSize, 0, 0);
-			firstPlayer.addView(firstName);
-
-			secondName = new TextView(this);
-			secondName.setTextSize(22);
-			if (GameManager.getInstance().mainActivity.getPlayer()
-					.getCurrentOpponentPlayer() != null)
-				secondName.setText(GameManager.getInstance().mainActivity
-						.getPlayer().getCurrentOpponentPlayer()
-						.getPlayerUsername());
-			secondName.setPadding(3 * cellSize, 3 * cellSize / 4, 0, 0);
-			secondPlayer.addView(secondName);
-
-			Info.addView(firstPlayer);
-			Info.addView(secondPlayer);
-
-			RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			indicatorParams.setMargins(cellSize, 5 * cellSize, 0, 0);
-			turnIndicator.setText(turnIndicatorText);
-			turnIndicator.setTextSize(20);
-			GameLayout.addView(turnIndicator, indicatorParams);
-
-			MyView grid = new MyView(this);
-			GameLayout.addView(Info);
-			GameLayout.addView(grid);
-			this.setContentView(GameLayout);
-			isTouchAllowed = true;
-
+			createGameProcessScreen();
 		}
 
 	}
 
+	private void createGameProcessScreen() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		screenWidth = dm.widthPixels;
+		screenHeight = dm.heightPixels;
+		cellSize = screenWidth / 9;
+		place = screenHeight / 3;
+		GameLayout = new RelativeLayout(this);
+		GameLayout.setBackgroundResource(R.drawable.background); //Sets the background of UI
+		
+		RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(cellSize, cellSize);
+		RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(cellSize, cellSize);
+
+		params1.setMargins(cellSize, cellSize, 0, 0);
+		params2.setMargins(cellSize, 5 * cellSize / 2, 0, 0);
+
+		try {
+			
+			//drawing the players icon 
+			inputs = this.getResources().getAssets().open(playerColor + ".png");
+			icon = BitmapFactory.decodeStream(inputs);
+			ImageView image1 = new ImageView(this);
+			image1.setImageBitmap(icon);
+			GameLayout.addView(image1, params1);
+			
+			//drawing the opponents icon
+			inputs = this.getResources().getAssets().open(opponentColor + ".png");
+			icon = BitmapFactory.decodeStream(inputs);
+			ImageView image2 = new ImageView(this);
+			image2.setImageBitmap(icon);
+			GameLayout.addView(image2, params2);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Info = new TableLayout(this);
+
+		firstPlayer = new TableRow(this);
+		secondPlayer = new TableRow(this);
+
+		firstName = new TextView(this);
+		firstName.setTextSize(pxToDp(cellSize)/2);
+		firstName.setText(GameManager.getInstance().mainActivity
+				.getPlayer().getPlayerUsername() + "(You)");
+		firstName.setPadding(3 * cellSize, cellSize, 0, 0);
+		firstPlayer.addView(firstName);
+
+		secondName = new TextView(this);
+		secondName.setTextSize(pxToDp(cellSize)/2);
+		if (GameManager.getInstance().mainActivity.getPlayer()
+				.getCurrentOpponentPlayer() != null)
+			secondName.setText(GameManager.getInstance().mainActivity
+					.getPlayer().getCurrentOpponentPlayer()
+					.getPlayerUsername());
+		secondName.setPadding(3 * cellSize, cellSize, 0, 0);
+		secondPlayer.addView(secondName);
+
+		Info.addView(firstPlayer);
+		Info.addView(secondPlayer);
+
+		RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		indicatorParams.setMargins(cellSize, 5 * cellSize, 0, 0);
+		turnIndicator.setText(turnIndicatorText);
+		turnIndicator.setTextSize(20);
+		GameLayout.addView(turnIndicator, indicatorParams);
+
+		MyView grid = new MyView(this);
+		GameLayout.addView(Info);
+		GameLayout.addView(grid);
+		
+		backButtonLayout = new RelativeLayout(this);
+		RelativeLayout.LayoutParams blp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, cellSize);
+		backButton = new Button(this);
+		backButton.setText("Resign");
+		backButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				popUpDialog(1);
+				}
+		});
+		backButtonLayout.setPadding(cellSize, 4*cellSize, cellSize, 0);
+		backButtonLayout.addView(backButton, blp);
+		GameLayout.addView(backButtonLayout);
+		this.setContentView(GameLayout);
+		isTouchAllowed = true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+
+	 }
+	
 	private void goToMainActivity() {
 		MainActivity.isFistTime = false;
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 
 	}
-
-	Paint BorderLinePaint = new Paint();
-
+	
 	public class MyView extends View {
 		public MyView(Context context) {
 			super(context);
@@ -170,8 +190,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			// TODO Auto-generated method stub
 
 			super.onDraw(canvas);
-
+			
+			Paint BorderLinePaint = new Paint();
 			BorderLinePaint.setStrokeWidth(3);
+			
 			for (int i = 0; i < 8; i++) {
 				rects[i] = new Rect(cellSize * (i + 1), place + 3 * cellSize,
 						cellSize * (i + 2), place + cellSize * 9);
@@ -188,6 +210,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	}
 
+	public static int pxToDp(int px){
+	    return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+	}
+	
 	public boolean onTouchEvent(MotionEvent event) {
 
 		if (!turn)
@@ -322,7 +348,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					board[i][j] = turn ? 1 : -1;
 					MediaPlayer mp = MediaPlayer.create(
 							getApplicationContext(), R.raw.tap);
-					if (soundIsOn)
+					if(soundIsOn)
 						mp.start();
 					Log.i("Done", "easily");
 					break;
@@ -334,25 +360,75 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 		}
 		if (checkIfFinished()) {
-			Dialog dialog = new Dialog(this);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.setCancelable(false);
-			if (isGameDraw()) {
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(),
-						R.raw.draw);
-				if (soundIsOn)
-					mp.start();
-				dialog.setTitle("Draw");
-
-			} else {
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(),
-						!turn ? R.raw.victory : R.raw.losing);
-				if (soundIsOn)
-					mp.start();
-				dialog.setTitle(!turn ? "You Won" : "You Lost");
+			
+			if(isGameDraw())
+				popUpDialog(2);
+			else {
+				if(!turn){						
+				popUpDialog(0);
+				}
+				else popUpDialog(1);
 			}
-			dialog.show();
+			
 		}
+	}
+
+	/*
+	 * status is 0 if the player won,
+	 * status is 1 if the opponent won,
+	 * status is 2 if draw 		
+	 */
+	private void popUpDialog(int status) {
+		Dialog dialog = new Dialog(this);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.setCancelable(false);
+		TableLayout dialogLayout = new TableLayout(this);
+		dialog.setContentView(dialogLayout);
+		
+		TableRow rematchRow=new TableRow(this);
+		Button rematchButton = new Button(this);
+		rematchButton.setText("Rematch");
+		rematchRow.addView(rematchButton);
+		
+		TableRow mainMenuRow=new TableRow(this);
+		Button mainMenuButton = new Button(this);
+		mainMenuButton.setText("Main Menu");
+		mainMenuButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(GameProcessActivity.this, MainActivity.class);
+				startActivity(intent);
+			}
+		});
+		mainMenuRow.addView(mainMenuButton);
+		
+		dialogLayout.addView(rematchRow);
+		dialogLayout.addView(mainMenuRow);
+		
+		switch (status){
+			
+			case 0:{
+				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
+				mp.start();
+				dialog.setTitle("You Won");
+				break;	
+			}		
+			case 1:{
+				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
+				mp.start();
+				dialog.setTitle("You Lost");
+				break;	
+			}
+			case 2:{ 
+				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
+				mp.start();
+				dialog.setTitle("Draw");
+				break;	
+			}
+		}
+		dialog.show();
 	}
 
 	/*
@@ -383,10 +459,5 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					.setText(GameManager.getInstance().mainActivity.getPlayer()
 							.getCurrentOpponentPlayer().getPlayerUsername());
 		}
-	}
-
-	@Override
-	public void onBackPressed() {
-
 	}
 }
