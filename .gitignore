@@ -24,3 +24,9 @@ proguard/
 
 # Log Files
 *.log
+
+#Unusual files
+bin/FourInARow.apk
+bin/classes.dex
+bin/jarlist.cache
+bin/resources.ap_
