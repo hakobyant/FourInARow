@@ -39,11 +39,11 @@ public class MainActivity extends Activity {
 	final static String OPPONENT_COLOR = "OpponentColor";
 	final static String IS_SOUND_ON = "IsSoundOn";
 
-	final static String RED = "red.png";
-	final static String YELLOW = "yellow.png";
-	final static String BLACK = "black.png";
-	final static String BLUE = "blue.png";
-	final static String GREEN = "green.png";
+	final static String RED = "red";
+	final static String YELLOW = "yellow";
+	final static String BLACK = "black";
+	final static String BLUE = "blue";
+	final static String GREEN = "green";
 
 	final static String SEND_MESSAGE = "send_message";
 	final static String GET_MESSAGE = "get_Message";
@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 	EditText enterName;
 	Button startGameButton, highScoresButton, settingsButton, helpButton;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
