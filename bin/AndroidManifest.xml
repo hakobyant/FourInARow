@@ -39,11 +39,7 @@
                 android:value="com.example.fourinarow.MainActivity" />
         </activity>
         <activity
-            android:name=".GameProcessActivity"
-            android:parentActivityName="com.example.fourinarow.PickOpponentActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.fourinarow.PickOpponentActivity" />
+            android:name=".GameProcessActivity">
         </activity>
         
           <activity
