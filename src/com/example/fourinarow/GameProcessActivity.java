@@ -34,6 +34,10 @@ import android.widget.TextView;
 
 public class GameProcessActivity extends Activity implements OnClickListener {
 
+	final static String YOUR_TURN = "Your turn";
+	final static String OPPONENTS_TURN = "Opponent's turn";
+	
+	
 	int screenWidth, screenHeight, cellSize, place;
 	RelativeLayout GameLayout, backButtonLayout;
 	TableLayout Info;
@@ -41,7 +45,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	TextView firstName, secondName;
 	Button backButton;
 	static String turnIndicatorText;
-
+	
 	boolean isTouchAllowed = false;
 	Rect[] rects; // will keep the places of the clickable
 					// rectangles
@@ -343,8 +347,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 					image.setImageBitmap(icon);
 					GameLayout.addView(image, iconParams);
 					turn = !turn;
-					turnIndicator.setText(turn ? "Your turn"
-							: "Opponent's turn");
+					turnIndicator.setText(turn ? GameProcessActivity.YOUR_TURN
+							: GameProcessActivity.OPPONENTS_TURN);
 					board[i][j] = turn ? 1 : -1;
 					MediaPlayer mp = MediaPlayer.create(
 							getApplicationContext(), R.raw.tap);
@@ -444,12 +448,12 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		if (turn) {
 			GameManager.getInstance().mainActivity.getPlayer()
 					.setCurrentOpponentPlayer(player2);
-			turnIndicatorText = "Your turn";
+			turnIndicatorText = GameProcessActivity.YOUR_TURN;
 		} else {
 			GameManager.getInstance().mainActivity.getPlayer()
 					.setCurrentOpponentPlayer(player1);
 
-			turnIndicatorText = "Opponent's turn";
+			turnIndicatorText = GameProcessActivity.OPPONENTS_TURN;
 
 			ServerConnection.getMove(player1);
 		}

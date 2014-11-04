@@ -539,8 +539,10 @@ public class ServerConnection {
 			@Override
 			public void onSuccess(String response) {
 				// TODO Auto-generated method stub
-				ServerConnection.activePlayersConnection(GameManager
-						.getInstance().mainActivity.getPlayer());
+				if (GameManager.getInstance().mainActivity.getPlayer()
+						.getIsPlayerOnline())
+					ServerConnection.activePlayersConnection(GameManager
+							.getInstance().mainActivity.getPlayer());
 			}
 
 			@Override
