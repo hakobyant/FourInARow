@@ -180,3 +180,4 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 	}
 }
+

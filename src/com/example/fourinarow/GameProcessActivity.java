@@ -466,3 +466,4 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		}
 	}
 }
+

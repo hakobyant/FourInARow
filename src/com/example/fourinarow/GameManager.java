@@ -18,3 +18,4 @@ public class GameManager {
 		return instance;
 	}
 }
+
