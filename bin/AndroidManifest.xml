@@ -39,7 +39,7 @@
                 android:value="com.example.fourinarow.MainActivity" />
         </activity>
         <activity
-            android:name=".GameProcessActivity">
+            android:name=".GameProcessActivity" >
         </activity>
         
           <activity
