@@ -133,6 +133,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 							GameManager.getInstance().mainActivity.getPlayer(),
 							retrievedResponse.get(j));
 					GameManager.getInstance().gameProcessActivity.turnIndicatorText = GameProcessActivity.YOUR_TURN;
+					
 					Intent PickOpponentIntent = new Intent(
 							PickOpponentActivity.this,
 							GameProcessActivity.class);
