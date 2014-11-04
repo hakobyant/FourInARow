@@ -5,7 +5,6 @@ import java.io.InputStream;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,12 +20,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -41,7 +37,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	TableLayout Info;
 	TableRow firstPlayer, secondPlayer;
 	TextView firstName, secondName;
-	Button backButton;
+	Button resignButton;
+	MediaPlayer mp = new MediaPlayer();
 	static String turnIndicatorText;
 
 	boolean isTouchAllowed = false;
@@ -152,18 +149,19 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		
 		backButtonLayout = new RelativeLayout(this);
 		RelativeLayout.LayoutParams blp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, cellSize);
-		backButton = new Button(this);
-		backButton.setText("Resign");
-		backButton.setOnClickListener(new OnClickListener() {
+		resignButton = new Button(this);
+		resignButton.setText("Resign");
+		resignButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				popUpDialog(1);
+				if(!mp.isPlaying())
+					popUpDialog(1);
 				}
 		});
 		backButtonLayout.setPadding(cellSize, 4*cellSize, cellSize, 0);
-		backButtonLayout.addView(backButton, blp);
+		backButtonLayout.addView(resignButton, blp);
 		GameLayout.addView(backButtonLayout);
 		this.setContentView(GameLayout);
 		isTouchAllowed = true;
@@ -391,6 +389,14 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		rematchRow.setGravity(Gravity.CENTER_HORIZONTAL);
 		Button rematchButton = new Button(this);
 		rematchButton.setText("Rematch");
+		rematchButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mp.stop();
+			}
+		});
 		rematchRow.addView(rematchButton);
 		
 		TableRow mainMenuRow=new TableRow(this);
@@ -402,6 +408,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				mp.stop();
 				Intent intent = new Intent(GameProcessActivity.this, MainActivity.class);
 				startActivity(intent);
 			}
@@ -414,19 +421,19 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		switch (status){
 			
 			case 0:{
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
 				mp.start();
 				dialog.setTitle("You Won");
 				break;	
 			}		
 			case 1:{
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
 				mp.start();
 				dialog.setTitle("You Lost");
 				break;	
 			}
 			case 2:{ 
-				MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
 				mp.start();
 				dialog.setTitle("Draw");
 				break;	
