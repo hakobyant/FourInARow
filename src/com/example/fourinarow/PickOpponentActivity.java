@@ -16,8 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
-public class PickOpponentActivity extends Activity implements OnClickListener {
+public class PickOpponentActivity extends ActionBarActivity implements OnClickListener {
 
 	final static public int NUMBER_OF_ONLINE_PLAYERS = 20;
 	final static public int CHANGE_TO_OFFLINE = 0;
@@ -32,7 +34,7 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+		
 		GameManager.getInstance().pickOpponentActivity = this;
 		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
 				true);
