@@ -129,15 +129,17 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 
 				public boolean onTouch(View v, MotionEvent event) {
 					// TODO Auto-generated method stub
+					ServerConnection.requestGameWith(
+							GameManager.getInstance().mainActivity.getPlayer(),
+							retrievedResponse.get(j));
+					GameManager.getInstance().gameProcessActivity.turnIndicatorText = GameProcessActivity.YOUR_TURN;
 					Intent PickOpponentIntent = new Intent(
 							PickOpponentActivity.this,
 							GameProcessActivity.class);
 					startActivity(PickOpponentIntent);
 					PickOpponentIntent.putExtra("Name", name);
 					PickOpponentIntent.putExtra("Score", score);
-					ServerConnection.requestGameWith(
-							GameManager.getInstance().mainActivity.getPlayer(),
-							retrievedResponse.get(j));
+					
 					return true;
 				}
 			});
@@ -173,12 +175,12 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 	}
 
 	public void startGameWith(final Player player1, final Player player2) {
-		Intent intent = new Intent(this, GameProcessActivity.class);
-		startActivity(intent);
 
 		GameManager.getInstance().gameProcessActivity.startGameWith(player1,
 				player2);
 
+		Intent intent = new Intent(this, GameProcessActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
@@ -194,15 +196,20 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 		ServerConnection.updateIsOnline(CHANGE_TO_OFFLINE);
 		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
 				false);
-		Log.i("Test","Paused");
+		Log.i("Test", "Paused");
 		super.onPause();
 	}
-	
+
 	@Override
 	public void onResume() {
 		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
 				true);
 		ServerConnection.updateIsOnline(CHANGE_TO_ONLINE);
+
+		ServerConnection
+				.removePreviousMessages(GameManager.getInstance().mainActivity
+						.getPlayer());
+
 		super.onResume();
 	}
 
