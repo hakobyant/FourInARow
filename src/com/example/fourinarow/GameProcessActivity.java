@@ -20,11 +20,10 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -390,13 +389,15 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		dialog.setContentView(dialogLayout);
 		
 		TableRow rematchRow=new TableRow(this);
+		rematchRow.setGravity(Gravity.CENTER_HORIZONTAL);
 		Button rematchButton = new Button(this);
 		rematchButton.setText("Rematch");
 		rematchRow.addView(rematchButton);
 		
 		TableRow mainMenuRow=new TableRow(this);
+		mainMenuRow.setGravity(Gravity.CENTER_HORIZONTAL);
 		Button mainMenuButton = new Button(this);
-		mainMenuButton.setText("Main Menu");
+		mainMenuButton.setText("Main Menu");	
 		mainMenuButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -410,7 +411,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		
 		dialogLayout.addView(rematchRow);
 		dialogLayout.addView(mainMenuRow);
-		
+	
 		switch (status){
 			
 			case 0:{
