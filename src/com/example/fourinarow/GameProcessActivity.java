@@ -41,7 +41,9 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	private static final int STATUS_LOSS = 1;
 	private static final int STATUS_DRAW = 2;
 
-	int screenWidth, screenHeight, cellSize, place;
+	int screenWidth, screenHeight;
+	static int cellSize;
+	int place;
 	RelativeLayout GameLayout, backButtonLayout;
 	TableLayout Info;
 	TableRow firstPlayer, secondPlayer;
@@ -59,6 +61,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	static boolean turn;
 	int[][] board = new int[7][6];
 	static TextView turnIndicator;
+	Paint BorderLinePaint = new Paint();
 	String playerColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getPlayerColor();
 
@@ -71,6 +74,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+				
 		GameManager.getInstance().gameProcessActivity = this;
 
 		turnIndicator = new TextView(this);
@@ -159,6 +163,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		GameLayout.addView(turnIndicator, indicatorParams);
 
 		MyView grid = new MyView(this);
+		for (int i = 0; i < 8; i++) {
+			rects[i] = new Rect(cellSize * (i + 1), place + cellSize,
+					cellSize * (i + 2), place + cellSize * 7);
+			}
 		GameLayout.addView(Info);
 		GameLayout.addView(grid);
 
@@ -212,20 +220,20 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 			super.onDraw(canvas);
 
-			Paint BorderLinePaint = new Paint();
+			
 			BorderLinePaint.setStrokeWidth(3);
-
-			for (int i = 0; i < 8; i++) {
-				rects[i] = new Rect(cellSize * (i + 1), place + 3 * cellSize,
-						cellSize * (i + 2), place + cellSize * 9);
-				canvas.drawLine(cellSize * (i + 1), place + cellSize, cellSize
+			BorderLinePaint.setStyle(Paint.Style.STROKE);
+			for (int i = 0; i < 7; i++) {
+				/*canvas.drawLine(cellSize * (i + 1), place + cellSize, cellSize
 						* (i + 1), place + cellSize * 7, BorderLinePaint);
-
+				*/
+				canvas.drawRect(rects[i],BorderLinePaint);
 			}
-			canvas.drawLine(cellSize, place + cellSize, cellSize * 8, place
-					+ cellSize, BorderLinePaint);
-			canvas.drawLine(cellSize, place + cellSize * 7, cellSize * 8, place
-					+ cellSize * 7, BorderLinePaint);
+			
+			//canvas.drawLine(cellSize, place + cellSize, cellSize * 8, place
+				//	+ cellSize, BorderLinePaint);
+			//canvas.drawLine(cellSize, place + cellSize * 7, cellSize * 8, place
+			//		+ cellSize * 7, BorderLinePaint);
 
 		}
 
@@ -433,8 +441,9 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	}
 
 	/*
-	 * status is STATUS_VICTORY if the player won, status is STATUS_LOSS if the
-	 * opponent won, status is STATUS_DRAW if draw
+	 * status is STATUS_VICTORY if the player won, 
+	 * status is STATUS_LOSS if the opponent won, 
+	 * status is STATUS_DRAW if draw
 	 */
 	private void popUpDialog(int status) {
 		Dialog dialog = new Dialog(this);
@@ -477,26 +486,29 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		dialogLayout.addView(rematchRow);
 		dialogLayout.addView(mainMenuRow);
 
-		switch (status) {
-
-		case STATUS_VICTORY: {
-			mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
-			mp.start();
-			dialog.setTitle("You Won");
-			break;
-		}
-		case STATUS_LOSS: {
-			mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
-			mp.start();
-			dialog.setTitle("You Lost");
-			break;
-		}
-		case STATUS_DRAW: {
-			mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
-			mp.start();
-			dialog.setTitle("Draw");
-			break;
-		}
+		switch (status){
+			
+			case STATUS_VICTORY:{
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
+				if(soundIsOn)
+					mp.start();
+				dialog.setTitle("You Won");
+				break;	
+			}		
+			case STATUS_LOSS:{
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
+				if(soundIsOn)
+					mp.start();
+				dialog.setTitle("You Lost");
+				break;	
+			}
+			case STATUS_DRAW:{ 
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
+				if(soundIsOn)
+					mp.start();
+				dialog.setTitle("Draw");
+				break;	
+			}
 		}
 		dialog.show();
 	}

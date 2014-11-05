@@ -12,10 +12,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 
 public class PickOpponentActivity extends Activity implements OnClickListener {
 
@@ -27,12 +29,13 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 	TableLayout players;
 	ArrayList<TableRow> playerRows;
 	TextView[] newTextView;
+	ProgressBar[] newProgressBar;
 	List<Player> RetrievedPlayers;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+		
 		GameManager.getInstance().pickOpponentActivity = this;
 		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
 				true);
@@ -55,9 +58,11 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 	private void createPickOpponentLayout() {
 
 		newTextView = new TextView[NUMBER_OF_ONLINE_PLAYERS];
-		for (int i = 0; i < 20; i++)
+		newProgressBar = new ProgressBar[NUMBER_OF_ONLINE_PLAYERS];
+		for (int i = 0; i < 20; i++){
 			newTextView[i] = new TextView(this);
-
+			newProgressBar[i] = new ProgressBar(this);
+		}
 		PickOpponentLayout = new RelativeLayout(this);
 		PickOpponentLayout.setBackgroundResource(R.drawable.background);// Sets
 																		// the
