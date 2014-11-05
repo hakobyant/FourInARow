@@ -94,15 +94,13 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 				Log.i("Vasa", Integer.toString(v.getId()));
 				Log.i("Vasa", Integer.toString(i));
 
-				Intent PickOpponentIntent = new Intent(
-						PickOpponentActivity.this, GameProcessActivity.class);
-				startActivity(PickOpponentIntent);
-				PickOpponentIntent.putExtra("Name", name);
-				PickOpponentIntent.putExtra("Score", score);
 				ServerConnection.requestGameWith(
 						GameManager.getInstance().mainActivity.getPlayer(),
 						RetrievedPlayers.get(i));
-				break;
+				startGameWith(
+						GameManager.getInstance().mainActivity.getPlayer(),
+						RetrievedPlayers.get(i));
+				return;
 			}
 		}
 	}
@@ -133,14 +131,14 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 							GameManager.getInstance().mainActivity.getPlayer(),
 							retrievedResponse.get(j));
 					GameManager.getInstance().gameProcessActivity.turnIndicatorText = GameProcessActivity.YOUR_TURN;
-					
+
 					Intent PickOpponentIntent = new Intent(
 							PickOpponentActivity.this,
 							GameProcessActivity.class);
 					startActivity(PickOpponentIntent);
 					PickOpponentIntent.putExtra("Name", name);
 					PickOpponentIntent.putExtra("Score", score);
-					
+
 					return true;
 				}
 			});
