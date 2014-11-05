@@ -34,6 +34,12 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	final static String YOUR_TURN = "Your turn";
 	final static String OPPONENTS_TURN = "Opponent's turn";
+	final static int MESSAGE_VICTORY = 100;
+	final static int MESSAGE_LOSS = 100;
+
+	private static final int STATUS_VICTORY = 0;
+	private static final int STATUS_LOSS = 1;
+	private static final int STATUS_DRAW = 2;
 	
 	
 	int screenWidth, screenHeight;
@@ -166,8 +172,13 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				ServerConnection.sendMove(
+						GameManager.getInstance().mainActivity.getPlayer(),
+						GameManager.getInstance().mainActivity.getPlayer()
+								.getCurrentOpponentPlayer(), Integer
+								.toString(MESSAGE_LOSS));
 				if(!mp.isPlaying())
-					popUpDialog(1);
+					popUpDialog(STATUS_LOSS);
 				}
 		});
 		backButtonLayout.setPadding(cellSize, 4*cellSize, cellSize, 0);
@@ -339,6 +350,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	}
 
 	public void dropDown(int i) {
+		if (i == MESSAGE_VICTORY) {
+			popUpDialog(STATUS_VICTORY);
+			return;
+		}
 		try {
 			for (int j = 0; j < 6; j++) {
 				if (board[i][j] == 0) {
@@ -390,9 +405,9 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	}
 
 	/*
-	 * status is 0 if the player won,
-	 * status is 1 if the opponent won,
-	 * status is 2 if draw 		
+	 * status is STATUS_VICTORY if the player won,
+	 * status is STATUS_LOSS if the opponent won,
+	 * status is STATUS_DRAW if draw 		
 	 */
 	private void popUpDialog(int status) {
 		Dialog dialog = new Dialog(this);
@@ -436,21 +451,21 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	
 		switch (status){
 			
-			case 0:{
+			case STATUS_VICTORY:{
 				mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
 				if(soundIsOn)
 					mp.start();
 				dialog.setTitle("You Won");
 				break;	
 			}		
-			case 1:{
+			case STATUS_LOSS:{
 				mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
 				if(soundIsOn)
 					mp.start();
 				dialog.setTitle("You Lost");
 				break;	
 			}
-			case 2:{ 
+			case STATUS_DRAW:{ 
 				mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
 				if(soundIsOn)
 					mp.start();
@@ -460,7 +475,6 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		}
 		dialog.show();
 	}
-
 	/*
 	 * -----------startGameWith--------------- Starts a game with the opponent
 	 * 'opponentID':'opponentUsername':'opponentScore'
