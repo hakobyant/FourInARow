@@ -17,7 +17,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -37,7 +36,9 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	final static String OPPONENTS_TURN = "Opponent's turn";
 	
 	
-	int screenWidth, screenHeight, cellSize, place;
+	int screenWidth, screenHeight;
+	static int cellSize;
+	int place;
 	RelativeLayout GameLayout, backButtonLayout;
 	TableLayout Info;
 	TableRow firstPlayer, secondPlayer;
@@ -55,6 +56,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	static boolean turn;
 	int[][] board = new int[7][6];
 	static TextView turnIndicator;
+	Paint BorderLinePaint = new Paint();
 	String playerColor = GameManager.getInstance().mainActivity.getPlayer()
 			.getPlayerColor();
 
@@ -148,6 +150,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		GameLayout.addView(turnIndicator, indicatorParams);
 
 		MyView grid = new MyView(this);
+		for (int i = 0; i < 8; i++) {
+			rects[i] = new Rect(cellSize * (i + 1), place + cellSize,
+					cellSize * (i + 2), place + cellSize * 7);
+			}
 		GameLayout.addView(Info);
 		GameLayout.addView(grid);
 		
@@ -195,20 +201,20 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 			super.onDraw(canvas);
 			
-			Paint BorderLinePaint = new Paint();
-			BorderLinePaint.setStrokeWidth(3);
 			
-			for (int i = 0; i < 8; i++) {
-				rects[i] = new Rect(cellSize * (i + 1), place + 3 * cellSize,
-						cellSize * (i + 2), place + cellSize * 9);
-				canvas.drawLine(cellSize * (i + 1), place + cellSize, cellSize
+			BorderLinePaint.setStrokeWidth(3);
+			BorderLinePaint.setStyle(Paint.Style.STROKE);
+			for (int i = 0; i < 7; i++) {
+				/*canvas.drawLine(cellSize * (i + 1), place + cellSize, cellSize
 						* (i + 1), place + cellSize * 7, BorderLinePaint);
-
+				*/
+				canvas.drawRect(rects[i],BorderLinePaint);
 			}
-			canvas.drawLine(cellSize, place + cellSize, cellSize * 8, place
-					+ cellSize, BorderLinePaint);
-			canvas.drawLine(cellSize, place + cellSize * 7, cellSize * 8, place
-					+ cellSize * 7, BorderLinePaint);
+			
+			//canvas.drawLine(cellSize, place + cellSize, cellSize * 8, place
+				//	+ cellSize, BorderLinePaint);
+			//canvas.drawLine(cellSize, place + cellSize * 7, cellSize * 8, place
+			//		+ cellSize * 7, BorderLinePaint);
 
 		}
 
@@ -218,6 +224,12 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	    return (int) (px / Resources.getSystem().getDisplayMetrics().density);
 	}
 	
+	public static float dpToPx(float dp,Context context){
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    float px = dp * (metrics.densityDpi / 160f);
+	    return px;
+	}
 	public boolean onTouchEvent(MotionEvent event) {
 
 		if (!turn)
@@ -426,19 +438,22 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			
 			case 0:{
 				mp = MediaPlayer.create(getApplicationContext(), R.raw.victory);
-				mp.start();
+				if(soundIsOn)
+					mp.start();
 				dialog.setTitle("You Won");
 				break;	
 			}		
 			case 1:{
 				mp = MediaPlayer.create(getApplicationContext(), R.raw.losing);
-				mp.start();
+				if(soundIsOn)
+					mp.start();
 				dialog.setTitle("You Lost");
 				break;	
 			}
 			case 2:{ 
 				mp = MediaPlayer.create(getApplicationContext(), R.raw.draw);
-				mp.start();
+				if(soundIsOn)
+					mp.start();
 				dialog.setTitle("Draw");
 				break;	
 			}

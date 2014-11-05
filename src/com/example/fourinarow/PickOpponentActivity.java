@@ -12,14 +12,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 
-public class PickOpponentActivity extends ActionBarActivity implements OnClickListener {
+
+public class PickOpponentActivity extends Activity implements OnClickListener {
 
 	final static public int NUMBER_OF_ONLINE_PLAYERS = 20;
 	final static public int CHANGE_TO_OFFLINE = 0;
@@ -29,6 +29,7 @@ public class PickOpponentActivity extends ActionBarActivity implements OnClickLi
 	TableLayout players;
 	ArrayList<TableRow> playerRows;
 	TextView[] newTextView;
+	ProgressBar[] newProgressBar;
 	List<Player> RetrievedPlayers;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +58,11 @@ public class PickOpponentActivity extends ActionBarActivity implements OnClickLi
 	private void createPickOpponentLayout() {
 
 		newTextView = new TextView[NUMBER_OF_ONLINE_PLAYERS];
-		for (int i = 0; i < 20; i++)
+		newProgressBar = new ProgressBar[NUMBER_OF_ONLINE_PLAYERS];
+		for (int i = 0; i < 20; i++){
 			newTextView[i] = new TextView(this);
-
+			newProgressBar[i] = new ProgressBar(this);
+		}
 		PickOpponentLayout = new RelativeLayout(this);
 		PickOpponentLayout.setBackgroundResource(R.drawable.background);// Sets
 																		// the
