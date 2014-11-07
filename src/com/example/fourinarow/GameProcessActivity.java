@@ -414,6 +414,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		updateScore();
 
 	}
+	
 
 	private void drawOccurs() {
 		popUpDialog(STATUS_DRAW);
