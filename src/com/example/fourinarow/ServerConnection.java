@@ -411,13 +411,15 @@ public class ServerConnection {
 
 								@Override
 								public void run() {
-									if (!GameManager.getInstance().gameProcessActivity.turn)
+									if (!GameManager.getInstance().gameProcessActivity.turn
+											|| Integer
+													.parseInt(retrievedResp[2]) == GameProcessActivity.MESSAGE_VICTORY)
 										GameManager.getInstance().gameProcessActivity.dropDown(Integer
 												.parseInt(retrievedResp[2]));
 									Log.i("Vasa", retrievedResp[2]);
 								}
 							});
-
+					getMove(player2);
 				}
 			}
 
@@ -557,4 +559,3 @@ public class ServerConnection {
 	}
 
 }
-

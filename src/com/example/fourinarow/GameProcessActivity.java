@@ -34,14 +34,14 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	final static String YOUR_TURN = "Your turn";
 	final static String OPPONENTS_TURN = "Opponent's turn";
-	final static int MESSAGE_VICTORY = 100;
-	final static int MESSAGE_LOSS = 100;
+	final public static int MESSAGE_VICTORY = 100;
+	final public static int MESSAGE_LOSS = 100;
 
-	private static final int STATUS_VICTORY = 0;
-	private static final int STATUS_LOSS = 1;
-	private static final int STATUS_DRAW = 2;
-	
-	
+
+	public static final int STATUS_VICTORY = 0;
+	public static final int STATUS_LOSS = 1;
+	public static final int STATUS_DRAW = 2;
+
 	int screenWidth, screenHeight;
 	static int cellSize;
 	int place;
@@ -72,11 +72,10 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-				
 		GameManager.getInstance().gameProcessActivity = this;
 
 		turnIndicator = new TextView(this);
-
+		
 		rects = new Rect[8];
 		
 		if (GameManager.getInstance().mainActivity.isFistTime) {
@@ -142,6 +141,9 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			secondName.setText(GameManager.getInstance().mainActivity
 					.getPlayer().getCurrentOpponentPlayer()
 					.getPlayerUsername());
+		else
+			secondName.setText("");
+
 		secondName.setPadding(3 * cellSize, cellSize, 0, 0);
 		secondPlayer.addView(secondName);
 
@@ -411,6 +413,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 				GameManager.getInstance().mainActivity.getPlayer()
 						.getCurrentOpponentPlayer(), STATUS_LOSS);
 		updateScore();
+		GameManager.getInstance().mainActivity.getPlayer().setCurrentOpponentPlayer(null);
 
 	}
 	
@@ -421,6 +424,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 				GameManager.getInstance().mainActivity.getPlayer()
 						.getCurrentOpponentPlayer(), STATUS_DRAW);
 		updateScore();
+		GameManager.getInstance().mainActivity.getPlayer().setCurrentOpponentPlayer(null);
+
 	}
 
 	private void victoryOccurs() {
@@ -429,6 +434,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 				GameManager.getInstance().mainActivity.getPlayer()
 						.getCurrentOpponentPlayer(), STATUS_VICTORY);
 		updateScore();
+		GameManager.getInstance().mainActivity.getPlayer().setCurrentOpponentPlayer(null);
+
 	}
 
 	private void calculateNewScore(Player player, Player OpponentPlayer,
@@ -525,6 +532,8 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			GameManager.getInstance().mainActivity.getPlayer()
 					.setCurrentOpponentPlayer(player2);
 			turnIndicatorText = GameProcessActivity.YOUR_TURN;
+			ServerConnection.getMove(player2);
+
 		} else {
 			GameManager.getInstance().mainActivity.getPlayer()
 					.setCurrentOpponentPlayer(player1);
