@@ -36,6 +36,10 @@ public class PickOpponentActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
+		PickOpponentLayout = new RelativeLayout(this);
+		PickOpponentLayout.setBackgroundResource(R.drawable.background);
+		this.setContentView(PickOpponentLayout);
+		
 		GameManager.getInstance().pickOpponentActivity = this;
 		GameManager.getInstance().mainActivity.getPlayer().setIsPlayerOnline(
 				true);

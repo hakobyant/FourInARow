@@ -99,13 +99,15 @@ public class Player {
 	// switch opponent colors
 	public void setCurrentOpponentPlayer(final Player p) {
 		currentOpponentPlayer = new Player();
-		currentOpponentPlayer.setPlayer(p.getPlayerID(), p.getPlayerUsername(),
+		if(p != null)
+			currentOpponentPlayer.setPlayer(p.getPlayerID(), p.getPlayerUsername(),
 				p.getPlayerScore(), GameManager.getInstance().mainActivity
 						.getPlayer().getOpponentColor(), GameManager
 						.getInstance().mainActivity.getPlayer()
 						.getPlayerColor(),
 				GameManager.getInstance().mainActivity.getPlayer()
 						.getPlayerIsSoundOn());
+			
 	}
 
 	public void setPlayer(final int id, final String usr, final int score) {
