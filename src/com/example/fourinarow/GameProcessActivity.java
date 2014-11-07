@@ -178,7 +178,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 								.getCurrentOpponentPlayer(), Integer
 								.toString(MESSAGE_LOSS));
 				if(!mp.isPlaying())
-					popUpDialog(STATUS_LOSS);
+					lossOccurs();
 				}
 		});
 		backButtonLayout.setPadding(cellSize, 4*cellSize, cellSize, 0);
@@ -351,7 +351,7 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 
 	public void dropDown(int i) {
 		if (i == MESSAGE_VICTORY) {
-			popUpDialog(STATUS_VICTORY);
+			victoryOccurs();
 			return;
 		}
 		try {
@@ -392,16 +392,52 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 		}
 		if (checkIfFinished()) {
 			
-			if(isGameDraw())
-				popUpDialog(2);
-			else {
-				if(!turn){						
-				popUpDialog(0);
-				}
-				else popUpDialog(1);
+			if (isGameDraw()) {
+				drawOccurs();
+			} else {
+				if (!turn) {
+					victoryOccurs();
+				} else
+					lossOccurs();
 			}
 			
 		}
+	}
+
+
+	private void lossOccurs() {
+		popUpDialog(STATUS_LOSS);
+		calculateNewScore(GameManager.getInstance().mainActivity.getPlayer(),
+				GameManager.getInstance().mainActivity.getPlayer()
+						.getCurrentOpponentPlayer(), STATUS_LOSS);
+		updateScore();
+
+	}
+	
+
+	private void drawOccurs() {
+		popUpDialog(STATUS_DRAW);
+		calculateNewScore(GameManager.getInstance().mainActivity.getPlayer(),
+				GameManager.getInstance().mainActivity.getPlayer()
+						.getCurrentOpponentPlayer(), STATUS_DRAW);
+		updateScore();
+	}
+
+	private void victoryOccurs() {
+		popUpDialog(STATUS_VICTORY);
+		calculateNewScore(GameManager.getInstance().mainActivity.getPlayer(),
+				GameManager.getInstance().mainActivity.getPlayer()
+						.getCurrentOpponentPlayer(), STATUS_VICTORY);
+		updateScore();
+	}
+
+	private void calculateNewScore(Player player, Player OpponentPlayer,
+			int status) {
+		
+	}
+
+	private void updateScore() {
+		
 	}
 
 	/*

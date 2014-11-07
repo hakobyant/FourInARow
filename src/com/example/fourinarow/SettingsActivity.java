@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,10 +58,18 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		filterArray[0] = new InputFilter.LengthFilter(15);
 		nameEdit.setFilters(filterArray);
 		nameEdit.setHint("Type Here");
+		//nameEdit.setFocusable(false);
+		nameEdit.setSelection(nameEdit.getText().length());
 		nameEdit.setOnKeyListener(new EditText.OnKeyListener() {
 		    public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-	            return (keyCode == KeyEvent.KEYCODE_ENTER);
+	            if(keyCode == KeyEvent.KEYCODE_ENTER){
+		    	//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+	            	Log.i("hello", "******axper*******");
+	            	InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+	            	imm.hideSoftInputFromWindow(nameEdit.getWindowToken(), 0);
+	            }
+		    	return (keyCode == KeyEvent.KEYCODE_ENTER);
 	        }
 	    });
 		nameEdit.setText(GameManager.getInstance().mainActivity.getPlayer().getPlayerUsername());
@@ -157,7 +168,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 					response, 
 					prefColorSpinner.getSelectedItem().toString(),
 					opponentColorSpinner.getSelectedItem().toString(),
-					soundSpinner.getSelectedItem().toString()
+					soundSpinner.getSelectedItem().toString(), false
 					);
 			Log.i("Vasa",response);
 			goToMainActivity();

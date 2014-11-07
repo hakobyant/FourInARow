@@ -11,6 +11,7 @@ public class Player {
 	private String playerColor;
 	private String opponentColor;
 	private boolean isSoundOn;
+	private boolean isFirstTime;
 	private boolean isPlayerOnline;
 
 
@@ -23,6 +24,7 @@ public class Player {
 		playerColor = "red";
 		opponentColor = "yellow";
 		isSoundOn = true;
+		isFirstTime = true;
 		isPlayerOnline = false;
 	}
 
@@ -92,6 +94,10 @@ public class Player {
 		isSoundOn = isOn;
 	}
 	
+	public void setIsFirstTime(final boolean isOn) {
+		isFirstTime = isOn;
+	}
+	
 	public void setIsPlayerOnline(final boolean isOnline) {
 		isPlayerOnline = isOnline;
 	}
@@ -105,7 +111,8 @@ public class Player {
 						.getInstance().mainActivity.getPlayer()
 						.getPlayerColor(),
 				GameManager.getInstance().mainActivity.getPlayer()
-						.getPlayerIsSoundOn());
+						.getPlayerIsSoundOn(),
+						GameManager.getInstance().mainActivity.getPlayer().isFirstTime);
 	}
 
 	public void setPlayer(final int id, final String usr, final int score) {
@@ -115,11 +122,12 @@ public class Player {
 	}
 
 	public void setPlayer(final int id, final String usr, final int score,
-			final String playerCol, final String OpponentCol, final boolean isOn) {
+			final String playerCol, final String OpponentCol, final boolean isOn, final boolean isFirstTime) {
 		setPlayer(id, usr, score);
 		setPlayerColor(playerCol);
 		setOpponentColor(OpponentCol);
 		setIsSoundOn(isOn);
+		setIsFirstTime(isFirstTime);
 	}
 
 	public void print() {

@@ -1,8 +1,5 @@
 package com.example.fourinarow;
 
-import java.util.Locale;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -10,11 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.InputFilter;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,9 +18,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //import android.graphics.Rect;
 
@@ -38,6 +32,7 @@ public class MainActivity extends Activity {
 	final static String PLAYER_COLOR = "PlayerColor";
 	final static String OPPONENT_COLOR = "OpponentColor";
 	final static String IS_SOUND_ON = "IsSoundOn";
+	final static String IS_FIRST_TIME = "IsFirstTime";
 
 	final static String RED = "red";
 	final static String YELLOW = "yellow";
@@ -65,6 +60,7 @@ public class MainActivity extends Activity {
 	private static SharedPreferences.Editor editor;
 
 	// private Handler handler;
+	
 
 	private static DisplayMetrics dm;
 	String PlayerName = "New Player";
@@ -97,20 +93,20 @@ public class MainActivity extends Activity {
 			Greeting = new TextView(this);
 			dm = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-			if (preferences.getInt(ID, -1) == -1) {
+			if (preferences.getBoolean(IS_FIRST_TIME, true) == true) {
 				createDialog();
 			} else {
+				
 				player.setPlayer(preferences.getInt(ID, -1),
 						preferences.getString(USERNAME, "New Player"),
 						preferences.getInt(SCORE, DEFAULT_SCORE),
 						preferences.getString(PLAYER_COLOR, RED),
 						preferences.getString(OPPONENT_COLOR, YELLOW),
-						preferences.getBoolean(IS_SOUND_ON, true));
+						preferences.getBoolean(IS_SOUND_ON, true),
+						preferences.getBoolean(IS_FIRST_TIME, false));
 
 				Greeting.setText("Hello " + player.getPlayerUsername());
 			}
-
 			createLayout(dm.widthPixels, dm.heightPixels);
 		}
 	}
@@ -242,6 +238,7 @@ public class MainActivity extends Activity {
 		InputFilter[] filterArray = new InputFilter[1];
 		filterArray[0] = new InputFilter.LengthFilter(15);
 		enterName = new EditText(this);
+		enterName.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
 		enterName.setFilters(filterArray);
 		enterName.setHint("Type here");
 		enterName.setOnKeyListener(new EditText.OnKeyListener() {
@@ -286,15 +283,16 @@ public class MainActivity extends Activity {
 		editor.putString(PLAYER_COLOR, RED);
 		editor.putString(OPPONENT_COLOR, YELLOW);
 		editor.putBoolean(IS_SOUND_ON, true);
+		editor.putBoolean(IS_FIRST_TIME, false);
 		editor.commit();
 
 		player.setPlayer(Integer.parseInt(parsedResponse[0]),
 				parsedResponse[1], Integer.parseInt(parsedResponse[2]), RED,
-				YELLOW, true);
+				YELLOW, true, true);
 	}
 
 	public void updateUserInfo(String response, String plCol, String oppCol,
-			String isSoundOn) {
+			String isSoundOn, boolean isFirstTime) {
 		boolean b = false;
 		if (isSoundOn.compareTo("On") == 0)
 			b = true;
@@ -307,11 +305,12 @@ public class MainActivity extends Activity {
 		editor.putString(PLAYER_COLOR, plCol);
 		editor.putString(OPPONENT_COLOR, oppCol);
 		editor.putBoolean(IS_SOUND_ON, b);
+		editor.putBoolean(IS_FIRST_TIME, false);
 		editor.commit();
 
 		player.setPlayer(Integer.parseInt(parsedResponse[0]),
 				parsedResponse[1], Integer.parseInt(parsedResponse[2]),
-				plCol, oppCol, b);
+				plCol, oppCol, b, false);
 	}
 
 	public void updateCurrentOpponentInfo(String response) {
