@@ -434,8 +434,32 @@ public class ServerConnection {
 	}
 
 	public static void updateScore(final int newScore) {
-		updateNameAndScore(GameManager.getInstance().mainActivity.getPlayer()
-				.getPlayerUsername(), newScore);
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("request_type", "updateScore"));
+
+		pairs.add(new BasicNameValuePair("user_id", Integer
+				.toString(GameManager.getInstance().mainActivity.getPlayer()
+						.getPlayerID())));
+		pairs.add(new BasicNameValuePair("new_score", Integer
+				.toString(newScore)));
+
+		MyRequest myRequest = new MyRequest(SEND_USER, pairs);
+		myRequest.setRequestObserver(new RequestObserver() {
+
+			@Override
+			public void onSuccess(String response) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onFailure(IOException e) {
+				// TODO Auto-generated method stub
+				Log.i("Vasa", "No internet connection");
+
+			}
+		});
+
+		requestQueue.add(myRequest);
 	}
 
 	public static void updateName(final String newName) {

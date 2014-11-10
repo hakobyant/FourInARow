@@ -330,8 +330,11 @@ public class MainActivity extends Activity {
 
 	}
 
-	public void updateUserScore(String response) {
-		// TODO Auto-generated method stub
+	public void updateUserScore(int score) {
+		editor.putInt(SCORE, score);
+		editor.commit();
+		
+		player.setPlayerScore(score);
 	}
 
 	public Player getPlayer() {
