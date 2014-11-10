@@ -446,6 +446,7 @@ public class GameProcessActivity extends Activity {
 	 * status is STATUS_LOSS if the opponent won,
 	 * status is STATUS_DRAW if draw 		
 	 */
+	
 	private void popUpDialog(int status) {
 		Dialog dialog = new Dialog(this);
 		dialog.setCanceledOnTouchOutside(false);
