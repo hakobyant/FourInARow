@@ -7,7 +7,7 @@ public class GameManager {
 	public MainActivity mainActivity;
 	public PickOpponentActivity pickOpponentActivity;
 	public SettingsActivity settingsActivity;
-
+	
 	private GameManager() {
 	}
 

@@ -38,6 +38,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.fourinarow.MainActivity" />
         </activity>
+          <activity
+            android:name=".HighScoresActivity"
+            android:parentActivityName="com.example.fourinarow.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.fourinarow.MainActivity" />
+        </activity>
         <activity
             android:name=".GameProcessActivity" >
         </activity>

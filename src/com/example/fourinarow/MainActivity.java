@@ -190,7 +190,15 @@ public class MainActivity extends Activity {
 
 		highScoresButton = new Button(this);
 		highScoresButton.setWidth(buttonWidth);
-		// highScoresButton.setOnClickListener(this);
+		highScoresButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent highscoresIntent = new Intent(MainActivity.this, HighScoresActivity.class);
+				startActivity(highscoresIntent);
+			}
+		});
 		highScoresButton.setText("Highscores");
 		HighScoresRow.addView(highScoresButton);
 
