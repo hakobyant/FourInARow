@@ -30,7 +30,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class GameProcessActivity extends Activity implements OnClickListener {
+public class GameProcessActivity extends Activity {
 
 	final static String YOUR_TURN = "Your turn";
 	final static String OPPONENTS_TURN = "Opponent's turn";
@@ -254,12 +254,12 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			int y = (int) event.getY();
 			for (int i = 0; i < 7; i++) {
 				if (rects[i].contains(x, y)) {
-					dropDown(i);// Log.i("RECT #", (i+1) + " ");
 					ServerConnection.sendMove(
 							GameManager.getInstance().mainActivity.getPlayer(),
 							GameManager.getInstance().mainActivity.getPlayer()
 									.getCurrentOpponentPlayer(), Integer
 									.toString(i));
+					dropDown(i);// Log.i("RECT #", (i+1) + " ");
 				}
 
 			}
@@ -342,13 +342,6 @@ public class GameProcessActivity extends Activity implements OnClickListener {
 			S += board[i + k][j + k];
 		}
 		return S;
-	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		Intent intent1 = new Intent(this, MainActivity.class);
-		startActivity(intent1);
 	}
 
 	public void dropDown(int i) {
